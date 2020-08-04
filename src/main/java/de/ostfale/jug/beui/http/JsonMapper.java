@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,10 @@ public class JsonMapper {
         }
     }
 
-    public <T> List<T> jsonToObjectList(String json) {
+    public static <T> List<T> jsonToObjectList(String json, Class<T> target) {
         try {
-            return mapper.readValue(json, new TypeReference<>() {
-            });
+            CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, target);
+            return mapper.readValue(json, javaType);
         } catch (JsonProcessingException e) {
             log.error("Failed to ");
             return Collections.emptyList();
@@ -59,7 +60,8 @@ public class JsonMapper {
         JsonFactory factory = new JsonFactory();
         factory.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
         ObjectMapper objectMapper = new ObjectMapper(factory);
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
     //    mapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }

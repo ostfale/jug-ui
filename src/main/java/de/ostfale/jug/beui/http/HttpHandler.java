@@ -1,11 +1,14 @@
 package de.ostfale.jug.beui.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static java.net.http.HttpResponse.BodyHandlers;
 
@@ -17,21 +20,40 @@ import static java.net.http.HttpResponse.BodyHandlers;
  */
 public class HttpHandler {
 
-    private final String BACKEND_HOST = "http://localhost:8080/api/v1";
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        HttpHandler httpHandler = new HttpHandler();
-        final CompletableFuture<String> completableFuture = httpHandler.getAsync("http://localhost:8080/api/v1/person/");
-        System.out.println(completableFuture.get());
-    }
+    private static final String BACKEND_HOST = "http://localhost:8080/api/v1/";
+    public static final String PERSON_BASE = BACKEND_HOST + "person/";
 
-    public CompletableFuture<String> getAsync(String uri) {
-        HttpClient client = HttpClient.newHttpClient();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+
+    public CompletableFuture<HttpResponse<String>> getAsync(String uri) {
+        log.debug("Async GET for URI: {}", uri);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
+                .header("Content-Type", "application/json")
+                .GET()
                 .build();
+        return httpClient.sendAsync(request, BodyHandlers.ofString());
+    }
 
-        return client.sendAsync(request, BodyHandlers.ofString())
-                .thenApply(HttpResponse::body);
+    public CompletableFuture<HttpResponse<String>> postAsync(String uri, String requestBody) {
+        log.debug("Async POST for URI: {}", uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        return httpClient.sendAsync(request, BodyHandlers.ofString());
+    }
+
+    public CompletableFuture<HttpResponse<String>> putAsync(String uri, String requestBody) {
+        log.debug("Async PUT for URI: {}", uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        return httpClient.sendAsync(request, BodyHandlers.ofString());
     }
 }

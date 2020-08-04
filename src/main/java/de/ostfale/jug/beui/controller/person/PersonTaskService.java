@@ -2,10 +2,14 @@ package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
+import de.ostfale.jug.beui.http.JsonMapper;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,29 +21,41 @@ import java.util.concurrent.CompletableFuture;
  */
 public class PersonTaskService {
 
-  /*  private final Worker<List<Person>> worker;
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+
+    private final Service<List<Person>> service;
+    private boolean hasBeenStarted = false;
 
     public PersonTaskService() {
-        worker = initService();
-    }*/
+        service = initService();
+    }
 
-   /* public Worker<List<Person>> getWorker() {
-        return worker;
-    }*/
+    public Service<List<Person>> getService() {
+        return service;
+    }
 
-   /* private Worker<List<Person>> initService() {
-        Service<List<Person>> service = new Service<>() {
+    public void startService() {
+        if (hasBeenStarted) {
+            service.restart();
+        } else {
+            hasBeenStarted = true;
+            service.start();
+        }
+    }
+
+    private Service<List<Person>> initService() {
+        return new Service<>() {
             @Override
             protected Task<List<Person>> createTask() {
                 return new Task<>() {
                     @Override
                     protected List<Person> call() throws Exception {
-                        HttpHandler httpHandler = new HttpHandler();
-                        final CompletableFuture<String> completableFuture = httpHandler.getAsync("http://localhost:8080/api/v1/person/");
+                        final CompletableFuture<HttpResponse<String>> asyncGet = new HttpHandler().getAsync(HttpHandler.PERSON_BASE);
+                        final String body = asyncGet.get().body();
+                        return JsonMapper.jsonToObjectList(body, Person.class);
                     }
-                }
+                };
             }
-        }
-
-    }*/
+        };
+    }
 }
