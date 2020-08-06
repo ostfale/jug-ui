@@ -1,12 +1,14 @@
 package de.ostfale.jug.beui;
 
-import de.ostfale.jug.beui.ui.person.PersonLayoutHandler;
+import de.ostfale.jug.beui.ui.person.PersonLayout;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -41,7 +43,7 @@ public class JugUI extends Application {
     private TabPane createTabPane() {
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.RIGHT);
-        Tab person = new Tab("Person", new PersonLayoutHandler().getLayoutControl());
+        Tab person = new Tab("Person", new PersonLayout().getLayoutPane());
         person.setClosable(false);
 
         Tab location = new Tab("Location");
@@ -50,8 +52,21 @@ public class JugUI extends Application {
         Tab events = new Tab("Events");
         events.setClosable(false);
 
-        tabPane.getTabs().addAll(events, person, location);
+        tabPane.getTabs().addAll(events, createPersonTab(), location);
         return tabPane;
+    }
+
+    private Tab createPersonTab() {
+        final Pane root = new PersonLayout().getLayoutPane();
+        AnchorPane ap = new AnchorPane();
+        AnchorPane.setTopAnchor(root, 5.0);
+        AnchorPane.setLeftAnchor(root, 5.0);
+        AnchorPane.setBottomAnchor(root, 5.0);
+        AnchorPane.setRightAnchor(root, 5.0);
+        ap.getChildren().add(root);
+        Tab person = new Tab("Person", ap);
+        person.setClosable(false);
+        return person;
     }
 
     private MenuBar createMenubar() {

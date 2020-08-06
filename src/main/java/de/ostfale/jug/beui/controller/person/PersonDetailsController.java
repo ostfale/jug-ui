@@ -29,7 +29,7 @@ public class PersonDetailsController {
         String lastName = txt_lastName.textProperty().getValue();
         String email = txt_email.textProperty().getValue();
         String phone = txt_phone.textProperty().getValue();
-        return new Person(firstName, lastName, email, phone);
+        return new Person(firstName, lastName, email, phone, "");
     }
 
     public void setPerson(Person oldPerson, Person newPerson) {
