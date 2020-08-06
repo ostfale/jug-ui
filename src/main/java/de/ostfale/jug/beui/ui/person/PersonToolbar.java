@@ -4,6 +4,7 @@ import de.ostfale.jug.beui.controller.person.PersonController;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -48,7 +49,7 @@ public class PersonToolbar {
         Button button = new Button();
         FontIcon icon = new FontIcon(FontAwesomeSolid.SYNC);
         button.setGraphic(icon);
-        button.setOnAction(e->personController.refresh());
+        button.setOnAction(e -> personController.refresh());
         return button;
     }
 
@@ -57,6 +58,8 @@ public class PersonToolbar {
         FontIcon icon = new FontIcon(FontAwesomeSolid.USER_PLUS);
         icon.setIconColor(Color.GREEN);
         button.setGraphic(icon);
+        button.setOnAction(e -> personController.addPerson());
+        button.setTooltip(new Tooltip("Add new Person"));
         return button;
     }
 
@@ -65,6 +68,7 @@ public class PersonToolbar {
         FontIcon icon = new FontIcon(FontAwesomeSolid.USER_MINUS);
         icon.setIconColor(Color.RED);
         button.setGraphic(icon);
+        button.setTooltip(new Tooltip("Delete selected Person"));
         return button;
     }
 
@@ -73,6 +77,7 @@ public class PersonToolbar {
         FontIcon icon = new FontIcon(FontAwesomeSolid.USER_EDIT);
         icon.setIconColor(Color.ORANGE);
         button.setGraphic(icon);
+        button.setTooltip(new Tooltip("Update selected Person"));
         return button;
     }
 }

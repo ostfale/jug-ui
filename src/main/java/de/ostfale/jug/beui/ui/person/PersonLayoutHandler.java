@@ -1,13 +1,19 @@
 package de.ostfale.jug.beui.ui.person;
 
 import de.ostfale.jug.beui.controller.person.PersonController;
+import de.ostfale.jug.beui.controller.person.PersonDetailsController;
 import de.ostfale.jug.beui.domain.Person;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import org.controlsfx.control.MasterDetailPane;
+
+import java.io.IOException;
+import java.net.URL;
 
 
 /**
@@ -20,9 +26,12 @@ public class PersonLayoutHandler {
 
     private final Node layoutControl;
     private final PersonController personController;
+    private  GridPane detailsPane;
+    private PersonDetailsController personDetailsController;
 
     public PersonLayoutHandler() {
-        personController = new PersonController();
+        initDetailsPane();
+        personController = new PersonController(personDetailsController);
         layoutControl = initLayout();
     }
 
@@ -34,6 +43,7 @@ public class PersonLayoutHandler {
         BorderPane borderPane = new BorderPane();
         MasterDetailPane masterDetailPane = new MasterDetailPane();
         masterDetailPane.setMasterNode(createTableView());
+        masterDetailPane.setDetailNode(detailsPane);
         masterDetailPane.setShowDetailNode(true);
         masterDetailPane.setDetailSide(Side.BOTTOM);
         borderPane.setCenter(masterDetailPane);
@@ -41,9 +51,25 @@ public class PersonLayoutHandler {
         return borderPane;
     }
 
+    private void initDetailsPane() {
+        final URL resource = ClassLoader.getSystemResource("./fxml/person_details.fxml");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(resource);
+        try {
+            detailsPane = loader.load();
+            personDetailsController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private TableView<Person> createTableView() {
         TableView<Person> tableView = new TableView<>();
         tableView.setItems(personController.getList());
+        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldUser, newUser)->{
+                personDetailsController.setPerson(oldUser,newUser);
+        });
         createColumnBinding(tableView);
         return tableView;
     }

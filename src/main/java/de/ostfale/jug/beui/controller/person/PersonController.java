@@ -19,23 +19,45 @@ public class PersonController {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    private final PersonTaskService taskService;
+    private final GetPersonsTaskService getPersonsTaskService;
+    private final AddPersonTaskService addPersonTaskService;
+    private final PersonDetailsController detailsController;
     private final ObservableList<Person> list = FXCollections.observableArrayList();
 
-    public PersonController() {
-        taskService = new PersonTaskService();
-        processServiceResult(taskService);
+    public PersonController(PersonDetailsController aDetailsController) {
+        detailsController = aDetailsController;
+        getPersonsTaskService = new GetPersonsTaskService();
+        addPersonTaskService = new AddPersonTaskService();
+        processGetServiceResult(getPersonsTaskService);
+        processAddServiceResult(addPersonTaskService);
     }
 
     public void refresh() {
-        taskService.startService();
+        log.debug("Refresh list of persons");
+        getPersonsTaskService.startService();
+    }
+
+    public void addPerson() {
+        final Person person = detailsController.getPerson();
+        if (person != null) {
+            log.info("Add person with name {} {}", person.getFirstName(), person.getLastName());
+            addPersonTaskService.setPerson(detailsController.getPerson());
+            addPersonTaskService.startService();
+        }
     }
 
     public ObservableList<Person> getList() {
         return list;
     }
 
-    private void processServiceResult(PersonTaskService taskService) {
+    private void processAddServiceResult(AddPersonTaskService addPersonTaskService) {
+        addPersonTaskService.getService().setOnSucceeded(e -> {
+           log.info("Person successfully created...");
+           refresh();
+        });
+    }
+
+    private void processGetServiceResult(GetPersonsTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             final List<Person> personList = taskService.getService().getValue();
             log.debug("Update PersonList found {} persons", personList.size());

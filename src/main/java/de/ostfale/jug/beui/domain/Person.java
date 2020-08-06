@@ -3,6 +3,8 @@ package de.ostfale.jug.beui.domain;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Objects;
+
 /**
  * Domain class for person object
  * Created :  31.07.2020
@@ -11,13 +13,35 @@ import javafx.beans.property.StringProperty;
  */
 public class Person {
 
-    private final StringProperty id = new SimpleStringProperty(this, "id", "");
+    private final StringProperty id = new SimpleStringProperty(this, "id", null);
     private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "");
     private final StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
     private final StringProperty email = new SimpleStringProperty(this, "email", "");
     private final StringProperty phone = new SimpleStringProperty(this, "phone", "");
 
     public Person() {
+    }
+
+    public Person(String firstName, String lastName, String email, String phone) {
+        this.firstName.setValue(firstName);
+        this.lastName.setValue(lastName);
+        this.email.setValue(email);
+        this.phone.setValue(phone);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return firstName.getValue().equals(person.getFirstName()) &&
+                lastName.getValue().equals(person.getLastName()) &&
+                email.getValue().equals(person.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email);
     }
 
     public Person(String id, String firstName, String lastName, String email, String phone) {

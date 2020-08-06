@@ -1,5 +1,6 @@
 package de.ostfale.jug.beui.controller.person;
 
+import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
@@ -19,28 +20,12 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author : Uwe Sauerbrei
  */
-public class PersonTaskService {
+public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    private final Service<List<Person>> service;
-    private boolean hasBeenStarted = false;
-
-    public PersonTaskService() {
+    public GetPersonsTaskService() {
         service = initService();
-    }
-
-    public Service<List<Person>> getService() {
-        return service;
-    }
-
-    public void startService() {
-        if (hasBeenStarted) {
-            service.restart();
-        } else {
-            hasBeenStarted = true;
-            service.start();
-        }
     }
 
     private Service<List<Person>> initService() {
@@ -50,6 +35,7 @@ public class PersonTaskService {
                 return new Task<>() {
                     @Override
                     protected List<Person> call() throws Exception {
+                        log.debug("Start service to retrieve list of all persons...");
                         final CompletableFuture<HttpResponse<String>> asyncGet = new HttpHandler().getAsync(HttpHandler.PERSON_BASE);
                         final String body = asyncGet.get().body();
                         return JsonMapper.jsonToObjectList(body, Person.class);

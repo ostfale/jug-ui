@@ -13,7 +13,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>14</java.version>
         <iconli.fontawesome.version>11.5.0</iconli.fontawesome.version>
-        <javafx.controls.version>14.0.1</javafx.controls.version>
+        <javafx.controls.version>14.0.2.1</javafx.controls.version>
         <controlsfx.version>11.0.2</controlsfx.version>
         <jackson.version>2.11.1</jackson.version>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
@@ -120,6 +120,13 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.controls.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.controls.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-javafx</artifactId>
