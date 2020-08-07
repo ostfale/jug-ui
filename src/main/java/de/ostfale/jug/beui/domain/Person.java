@@ -1,7 +1,9 @@
 package de.ostfale.jug.beui.domain;
 
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Callback;
 
 import java.util.Objects;
 
@@ -23,6 +25,11 @@ public class Person {
     public Person() {
     }
 
+    @Override
+    public String toString() {
+        return firstName.getValue() + " " + lastName.getValue();
+    }
+
     public Person(String firstName, String lastName, String email, String phone, String bio) {
         this.firstName.set(firstName);
         this.lastName.set(lastName);
@@ -30,6 +37,10 @@ public class Person {
         this.phone.set(phone);
         this.bio.set(bio);
     }
+
+    public static Callback<Person, Observable[]> extractor = p -> new Observable[]{
+            p.firstNameProperty(), p.lastNameProperty(), p.emailProperty(), p.phoneProperty(), p.bioProperty()
+    };
 
     @Override
     public boolean equals(Object o) {

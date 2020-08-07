@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ostfale.jug.beui.controller.person.PersonMasterDetailController">
    <children>
       <SplitPane dividerPositions="0.29797979797979796" layoutX="6.0" layoutY="89.0" prefHeight="160.0" prefWidth="424.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
@@ -64,7 +63,7 @@
                               <Insets right="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="txt_firstname" GridPane.columnIndex="1">
+                        <TextField fx:id="txt_firstname" onKeyReleased="#handleKeyAction" GridPane.columnIndex="1">
                            <opaqueInsets>
                               <Insets left="5.0" right="5.0" />
                            </opaqueInsets>
@@ -72,29 +71,29 @@
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="txt_lastname" GridPane.columnIndex="3">
+                        <TextField fx:id="txt_lastname" onKeyReleased="#handleKeyAction" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="txt_email" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="txt_email" onKeyReleased="#handleKeyAction" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="txt_phone" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="txt_phone" onKeyReleased="#handleKeyAction" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextArea fx:id="ta_bio" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+                        <TextArea fx:id="ta_bio" onKeyReleased="#handleKeyAction" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
                            <GridPane.margin>
                               <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                            </GridPane.margin>
                         </TextArea>
                         <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3">
                           <buttons>
-                            <Button fx:id="btn_refresh" mnemonicParsing="false" text="Refresh" />
+                            <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
                               <Button fx:id="btn_new" mnemonicParsing="false" text="New" />
                               <Button fx:id="btn_update" mnemonicParsing="false" text="Update" />
                               <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />

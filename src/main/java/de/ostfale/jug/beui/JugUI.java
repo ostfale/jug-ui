@@ -43,9 +43,6 @@ public class JugUI extends Application {
     private TabPane createTabPane() {
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.RIGHT);
-        Tab person = new Tab("Person", new PersonLayout().getLayoutPane());
-        person.setClosable(false);
-
         Tab location = new Tab("Location");
         location.setClosable(false);
 

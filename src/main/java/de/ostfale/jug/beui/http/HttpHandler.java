@@ -3,14 +3,17 @@ package de.ostfale.jug.beui.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 import static java.net.http.HttpResponse.BodyHandlers;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
  * Provides services to retrieve data from backend
@@ -35,6 +38,18 @@ public class HttpHandler {
                 .GET()
                 .build();
         return httpClient.sendAsync(request, BodyHandlers.ofString());
+    }
+
+    public HttpResponse<String> getSync(String uri) throws IOException, InterruptedException {
+        log.debug("Sync GET for URI: {}", uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("Content-Type", "application/json")
+                .version(HttpClient.Version.HTTP_2)
+                .timeout(Duration.of(3, SECONDS))
+                .GET()
+                .build();
+        return httpClient.send(request, BodyHandlers.ofString());
     }
 
     public CompletableFuture<HttpResponse<String>> postAsync(String uri, String requestBody) {

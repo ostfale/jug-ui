@@ -35,9 +35,9 @@ public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
                 return new Task<>() {
                     @Override
                     protected List<Person> call() throws Exception {
-                        log.debug("Start service to retrieve list of all persons...");
-                        final CompletableFuture<HttpResponse<String>> asyncGet = new HttpHandler().getAsync(HttpHandler.PERSON_BASE);
-                        final String body = asyncGet.get().body();
+                        log.debug("Start sync service to retrieve list of all persons...");
+                        final HttpResponse<String> syncGet = new HttpHandler().getSync(HttpHandler.PERSON_BASE);
+                        final String body = syncGet.body();
                         return JsonMapper.jsonToObjectList(body, Person.class);
                     }
                 };
