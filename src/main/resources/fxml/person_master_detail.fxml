@@ -94,9 +94,9 @@
                         <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3">
                           <buttons>
                             <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
-                              <Button fx:id="btn_new" mnemonicParsing="false" text="New" />
+                              <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addPersonAction" text="New" />
                               <Button fx:id="btn_update" mnemonicParsing="false" text="Update" />
-                              <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
+                              <Button fx:id="btn_delete" mnemonicParsing="false" onAction="#deletePersonAction" text="Delete" />
                           </buttons>
                            <GridPane.margin>
                               <Insets right="5.0" />

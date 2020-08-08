@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(GetPersonsTaskService.class);
 
     public GetPersonsTaskService() {
         service = initService();

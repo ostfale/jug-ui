@@ -3,15 +3,12 @@ package de.ostfale.jug.beui.http;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +21,7 @@ import java.util.Optional;
  */
 public class JsonMapper {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(JsonMapper.class);
 
     private static final ObjectMapper mapper = initMapper();
 
@@ -62,7 +59,7 @@ public class JsonMapper {
         ObjectMapper objectMapper = new ObjectMapper(factory);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-    //    mapper.registerModule(new JavaTimeModule());
+        //    mapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
 }

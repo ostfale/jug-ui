@@ -17,7 +17,6 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -31,7 +30,7 @@ import java.util.ResourceBundle;
  */
 public class PersonMasterDetailController implements Initializable {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(PersonMasterDetailController.class);
 
     @FXML
     private ListView<Person> lst_person;
@@ -46,8 +45,6 @@ public class PersonMasterDetailController implements Initializable {
     @FXML
     private TextArea ta_bio;
     @FXML
-    private Button btn_refresh;
-    @FXML
     private Button btn_new;
     @FXML
     private Button btn_update;
@@ -59,6 +56,8 @@ public class PersonMasterDetailController implements Initializable {
     private Person selectedPerson;
     private ChangeListener<Person> personChangeListener;
     private final GetPersonsTaskService getPersonsTaskService = new GetPersonsTaskService();
+    private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
+    private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -77,6 +76,8 @@ public class PersonMasterDetailController implements Initializable {
 
         getPersonsTaskService.startService();
         processGetServiceResult(getPersonsTaskService);
+        processAddPersonServiceResult(addPersonTaskService);
+        processDeletePersonServiceResult(deletePersonTaskService);
         initListView(lst_person);
     }
 
@@ -89,9 +90,9 @@ public class PersonMasterDetailController implements Initializable {
             }
             return result;
         });
-        listView.setItems(sortedList);
+        lst_person.setItems(sortedList);
 
-        listView.getSelectionModel().selectedItemProperty().addListener(
+        lst_person.getSelectionModel().selectedItemProperty().addListener(
                 personChangeListener = ((observable, oldValue, newValue) -> {
                     selectedPerson = newValue; // can be null if nothing is selected
                     modifiedProperty.set(false);
@@ -110,7 +111,7 @@ public class PersonMasterDetailController implements Initializable {
                     }
                 }));
 
-        listView.getSelectionModel().selectFirst();  // pre-select first entry
+        lst_person.getSelectionModel().selectFirst();  // pre-select first entry
     }
 
     private void processGetServiceResult(GetPersonsTaskService taskService) {
@@ -118,6 +119,18 @@ public class PersonMasterDetailController implements Initializable {
             final List<Person> personList = taskService.getService().getValue();
             log.debug("Update PersonList found {} persons", personList.size());
             lst_person.setItems(FXCollections.observableList(personList));
+        });
+    }
+
+    private void processAddPersonServiceResult(AddPersonTaskService taskService) {
+        taskService.getService().setOnSucceeded(e -> {
+            log.info("Person successfully added...");
+        });
+    }
+
+    private void processDeletePersonServiceResult(DeletePersonTaskService taskService) {
+        taskService.getService().setOnSucceeded(e -> {
+            log.info("Person successfully deleted...");
         });
     }
 
@@ -129,5 +142,24 @@ public class PersonMasterDetailController implements Initializable {
     @FXML
     private void refreshButtonAction(ActionEvent actionEvent) {
         getPersonsTaskService.startService();
+    }
+
+    @FXML
+    private void addPersonAction(ActionEvent actionEvent) {
+        String firstName = txt_firstname.getText();
+        String lastName = txt_lastname.getText();
+        String email = txt_email.getText();
+        String phone = txt_phone.getText();
+        String bio = ta_bio.getText();
+        Person newPerson = new Person(firstName, lastName, email, phone, bio);
+        personList.add(newPerson);
+        addPersonTaskService.setPerson(newPerson);
+        addPersonTaskService.startService();
+    }
+
+    @FXML
+    private void deletePersonAction(ActionEvent actionEvent) {
+        deletePersonTaskService.setPerson(selectedPerson);
+        deletePersonTaskService.startService();
     }
 }

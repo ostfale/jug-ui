@@ -23,7 +23,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
  */
 public class HttpHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(HttpHandler.class);
 
     private static final String BACKEND_HOST = "http://localhost:8080/api/v1/";
     public static final String PERSON_BASE = BACKEND_HOST + "person/";
@@ -58,6 +58,15 @@ public class HttpHandler {
                 .uri(URI.create(uri))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        return httpClient.sendAsync(request, BodyHandlers.ofString());
+    }
+
+    public CompletableFuture<HttpResponse<String>> deleteAsync(String uri) {
+        log.debug("Async DELETE for URI: {}", uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .DELETE()
                 .build();
         return httpClient.sendAsync(request, BodyHandlers.ofString());
     }
