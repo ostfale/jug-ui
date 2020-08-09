@@ -25,22 +25,12 @@ public class JsonMapper {
 
     private static final ObjectMapper mapper = initMapper();
 
-    public static <T> Optional<T> jsonToObject(String json, Class<T> clazz) {
-        try {
-            return Optional.of(mapper.readValue(json, clazz));
-        } catch (JsonProcessingException e) {
-            log.error("Failed to map JSON to class: {}", clazz.getSimpleName());
-            return Optional.empty();
-        }
+    public static <T> T jsonToObject(String json, Class<T> clazz) throws JsonProcessingException {
+            return mapper.readValue(json, clazz);
     }
 
-    public static <T> Optional<String> objectToJson(T obj) {
-        try {
-            return Optional.of(mapper.writeValueAsString(obj));
-        } catch (JsonProcessingException e) {
-            log.error("Failed to map class to JSON: {}", obj.getClass().getSimpleName());
-            return Optional.empty();
-        }
+    public static <T> String objectToJson(T obj) throws JsonProcessingException {
+            return mapper.writeValueAsString(obj);
     }
 
     public static <T> List<T> jsonToObjectList(String json, Class<T> target) {

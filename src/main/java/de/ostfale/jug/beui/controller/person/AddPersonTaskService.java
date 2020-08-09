@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.Optional;
 
 /**
  * Add new person to database
@@ -23,7 +22,7 @@ public class AddPersonTaskService extends BaseTaskService<Void> {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    private  Person person;
+    private Person person;
 
     public AddPersonTaskService() {
         service = initService();
@@ -41,14 +40,12 @@ public class AddPersonTaskService extends BaseTaskService<Void> {
                     @Override
                     protected Void call() {
                         log.debug("Start service to add new person...");
-                        final Optional<String> optJson = JsonMapper.objectToJson(person);
-                        optJson.ifPresent(s -> {
-                            try {
-                                new HttpHandler().postSync(HttpHandler.PERSON_BASE, optJson.get());
-                            } catch (IOException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        });
+                        try {
+                            final String json = JsonMapper.objectToJson(person);
+                            new HttpHandler().postSync(HttpHandler.PERSON_BASE, json);
+                        } catch (IOException | InterruptedException e) {
+                            log.error("Adding new person {} {} failed! Reason: {}", person.getFirstName(), person.getLastName(), e.getMessage());
+                        }
                         return null;
                     }
                 };

@@ -7,11 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test for JSON mapper
@@ -23,12 +19,11 @@ class JsonMapperTest {
 
     private ObjectMapper objectMapper;
     private Person person;
-    private List<Person> personList;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        person = new Person("1", "Max", "Schneider", "mschneider@email.com", "0188774433");
+        person = new Person("Max", "Schneider", "mschneider@email.com", "0188774433","My Bio");
     }
 
     @Test
@@ -37,11 +32,9 @@ class JsonMapperTest {
         // given
         String jsonString = objectMapper.writeValueAsString(person);
         // when
-        final Optional<Person> mappedPerson = JsonMapper.jsonToObject(jsonString, Person.class);
+        final Person mappedPerson = JsonMapper.jsonToObject(jsonString, Person.class);
         // then
-        assertTrue(mappedPerson.isPresent());
-        person = mappedPerson.get();
-        assertEquals("1", person.getId());
+        assertNotNull(mappedPerson);
         assertEquals("Max", person.getFirstName());
         assertEquals("Schneider", person.getLastName());
         assertEquals("mschneider@email.com", person.getEmail());
@@ -50,15 +43,14 @@ class JsonMapperTest {
 
     @Test
     @DisplayName("Serialize class object into JSON string")
-    public void TestSerializationObject() {
+    public void TestSerializationObject() throws JsonProcessingException {
         // when
-        final Optional<String> json = JsonMapper.objectToJson(person);
+        final String json = JsonMapper.objectToJson(person);
         // then
-        assertTrue(json.isPresent());
-        final String personString = json.get();
-        assertTrue(personString.contains("Max"));
-        assertTrue(personString.contains("Schneider"));
-        assertTrue(personString.contains("mschneider@email.com"));
-        assertTrue(personString.contains("0188774433"));
+        assertFalse(json.isEmpty());
+        assertTrue(json.contains("Max"));
+        assertTrue(json.contains("Schneider"));
+        assertTrue(json.contains("mschneider@email.com"));
+        assertTrue(json.contains("0188774433"));
     }
 }
