@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
 
 import static de.ostfale.jug.beui.http.HttpHandler.PERSON_BASE;
 
@@ -19,7 +18,7 @@ import static de.ostfale.jug.beui.http.HttpHandler.PERSON_BASE;
  *
  * @author : Uwe Sauerbrei
  */
-public class DeletePersonTaskService extends BaseTaskService<HttpResponse<String>> {
+public class DeletePersonTaskService extends BaseTaskService<Void> {
 
     private static final Logger log = LoggerFactory.getLogger(DeletePersonTaskService.class);
 
@@ -33,18 +32,16 @@ public class DeletePersonTaskService extends BaseTaskService<HttpResponse<String
         this.person = person;
     }
 
-    private Service<HttpResponse<String>> initService() {
+    private Service<Void> initService() {
         return new Service<>() {
             @Override
-            protected Task<HttpResponse<String>> createTask() {
+            protected Task<Void> createTask() {
                 return new Task<>() {
                     @Override
-                    protected HttpResponse<String> call() throws Exception {
-                        log.debug("Delete person {} {}", person.getFirstName(), person.getLastName());
-                        final CompletableFuture<HttpResponse<String>> completableFuture = new HttpHandler().deleteAsync(PERSON_BASE + person.getId());
-                        HttpResponse<String> response = completableFuture.get();
-                        log.debug("Response for deletion: {}", response.statusCode());
-                        return response;
+                    protected Void call() throws Exception {
+                        final HttpResponse<String> result = new HttpHandler().deleteSync(PERSON_BASE + person.getId());
+                        log.debug("Delete person {} {} with Response Status: {}", person.getFirstName(), person.getLastName(), result.statusCode());
+                        return null;
                     }
                 };
             }

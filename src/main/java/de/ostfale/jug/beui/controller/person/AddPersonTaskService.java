@@ -9,6 +9,7 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
@@ -41,7 +42,13 @@ public class AddPersonTaskService extends BaseTaskService<Void> {
                     protected Void call() {
                         log.debug("Start service to add new person...");
                         final Optional<String> optJson = JsonMapper.objectToJson(person);
-                        optJson.ifPresent(s -> new HttpHandler().postAsync(HttpHandler.PERSON_BASE, optJson.get()));
+                        optJson.ifPresent(s -> {
+                            try {
+                                new HttpHandler().postSync(HttpHandler.PERSON_BASE, optJson.get());
+                            } catch (IOException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
                         return null;
                     }
                 };

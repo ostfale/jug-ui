@@ -52,23 +52,26 @@ public class HttpHandler {
         return httpClient.send(request, BodyHandlers.ofString());
     }
 
-    public CompletableFuture<HttpResponse<String>> postAsync(String uri, String requestBody) {
+    public HttpResponse<String> postSync(String uri, String requestBody) throws IOException, InterruptedException {
         log.debug("Async POST for URI: {}", uri);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
+                .version(HttpClient.Version.HTTP_2)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
-        return httpClient.sendAsync(request, BodyHandlers.ofString());
+        return httpClient.send(request, BodyHandlers.ofString());
     }
 
-    public CompletableFuture<HttpResponse<String>> deleteAsync(String uri) {
+    public HttpResponse<String> deleteSync(String uri) throws IOException, InterruptedException {
         log.debug("Async DELETE for URI: {}", uri);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
+                .header("Content-Type", "application/json")
+                .version(HttpClient.Version.HTTP_2)
                 .DELETE()
                 .build();
-        return httpClient.sendAsync(request, BodyHandlers.ofString());
+        return httpClient.send(request, BodyHandlers.ofString());
     }
 
     public CompletableFuture<HttpResponse<String>> putAsync(String uri, String requestBody) {

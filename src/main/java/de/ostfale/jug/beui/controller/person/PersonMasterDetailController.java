@@ -51,7 +51,7 @@ public class PersonMasterDetailController implements Initializable {
     @FXML
     private Button btn_delete;
 
-    private final ObservableList<Person> personList = FXCollections.observableArrayList(Person.extractor);
+    private final ObservableList<Person> personList = FXCollections.observableArrayList();
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
     private Person selectedPerson;
     private ChangeListener<Person> personChangeListener;
@@ -82,17 +82,10 @@ public class PersonMasterDetailController implements Initializable {
     }
 
     private void initListView(ListView<Person> listView) {
-        SortedList<Person> sortedList = new SortedList<>(personList);  // use sorted list by last and first name
-        sortedList.setComparator((p1, p2) -> {
-            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
-            if (result == 0) {
-                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
-            }
-            return result;
-        });
-        lst_person.setItems(sortedList);
+        SortedList<Person> sortedList = prepareSortedList(personList);
+        listView.setItems(sortedList);
 
-        lst_person.getSelectionModel().selectedItemProperty().addListener(
+        listView.getSelectionModel().selectedItemProperty().addListener(
                 personChangeListener = ((observable, oldValue, newValue) -> {
                     selectedPerson = newValue; // can be null if nothing is selected
                     modifiedProperty.set(false);
@@ -111,26 +104,43 @@ public class PersonMasterDetailController implements Initializable {
                     }
                 }));
 
-        lst_person.getSelectionModel().selectFirst();  // pre-select first entry
+        listView.getSelectionModel().selectFirst();  // pre-select first entry
+    }
+
+    private SortedList<Person> prepareSortedList(ObservableList<Person> personList) {
+        SortedList<Person> sortedList = new SortedList<>(personList);  // use sorted list by last and first name
+        sortedList.setComparator((p1, p2) -> {
+            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
+            if (result == 0) {
+                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
+            }
+            return result;
+        });
+        return sortedList;
     }
 
     private void processGetServiceResult(GetPersonsTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
-            final List<Person> personList = taskService.getService().getValue();
-            log.debug("Update PersonList found {} persons", personList.size());
-            lst_person.setItems(FXCollections.observableList(personList));
+            final List<Person> resultList = taskService.getService().getValue();
+            log.debug("Update PersonList found {} persons", resultList.size());
+            personList.clear();
+            personList.addAll(resultList);
         });
     }
 
     private void processAddPersonServiceResult(AddPersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person successfully added...");
+            getPersonsTaskService.startService();
+            lst_person.refresh();
         });
     }
 
     private void processDeletePersonServiceResult(DeletePersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
-            log.info("Person successfully deleted...");
+            log.info("Person has been successfully deleted...");
+            getPersonsTaskService.startService();
+            lst_person.refresh();
         });
     }
 
@@ -152,7 +162,6 @@ public class PersonMasterDetailController implements Initializable {
         String phone = txt_phone.getText();
         String bio = ta_bio.getText();
         Person newPerson = new Person(firstName, lastName, email, phone, bio);
-        personList.add(newPerson);
         addPersonTaskService.setPerson(newPerson);
         addPersonTaskService.startService();
     }
