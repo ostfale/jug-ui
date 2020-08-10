@@ -58,6 +58,7 @@ public class PersonMasterDetailController implements Initializable {
     private final GetPersonsTaskService getPersonsTaskService = new GetPersonsTaskService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
     private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
+    private final UpdatePersonTaskService updatePersonTaskService = new UpdatePersonTaskService();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -144,6 +145,14 @@ public class PersonMasterDetailController implements Initializable {
         });
     }
 
+    private void processUpdatePersonServiceResult(UpdatePersonTaskService taskService) {
+        taskService.getService().setOnSucceeded(e -> {
+            log.info("Person has been successfully been updated...");
+            updatePersonTaskService.startService();
+            lst_person.refresh();
+        });
+    }
+
     @FXML
     private void handleKeyAction() {
         modifiedProperty.set(true);
@@ -164,6 +173,17 @@ public class PersonMasterDetailController implements Initializable {
         Person newPerson = new Person(firstName, lastName, email, phone, bio);
         addPersonTaskService.setPerson(newPerson);
         addPersonTaskService.startService();
+    }
+
+    @FXML
+    private void updatePersonAction(ActionEvent actionEvent) {
+        selectedPerson.setFirstName(txt_firstname.getText());
+        selectedPerson.setLastName(txt_lastname.getText());
+        selectedPerson.setEmail(txt_email.getText());
+        selectedPerson.setPhone(txt_phone.getText());
+        selectedPerson.setBio(ta_bio.getText());
+        updatePersonTaskService.setPerson(selectedPerson);
+        updatePersonTaskService.startService();
     }
 
     @FXML

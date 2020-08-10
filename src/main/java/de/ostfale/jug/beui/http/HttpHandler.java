@@ -83,4 +83,15 @@ public class HttpHandler {
                 .build();
         return httpClient.sendAsync(request, BodyHandlers.ofString());
     }
+
+    public HttpResponse<String> putSync(String uri, String requestBody) throws IOException, InterruptedException {
+        log.debug("Sync PUT for URI: {}", uri);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .version(HttpClient.Version.HTTP_2)
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        return httpClient.send(request, BodyHandlers.ofString());
+    }
 }
