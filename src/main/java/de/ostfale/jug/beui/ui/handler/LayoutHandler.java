@@ -13,6 +13,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 public class LayoutHandler {
 
     private final PersonHandler personHandler = new PersonHandler();
+    private final LocationHandler locationHandler = new LocationHandler();
 
     public void initLayout(Stage primaryStage) {
         primaryStage.setTitle("JUG HH Event Handler");
@@ -30,13 +31,10 @@ public class LayoutHandler {
     private TabPane createTabPane() {
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.RIGHT);
-        Tab location = new Tab("Location");
-        location.setClosable(false);
-
         Tab events = new Tab("Events");
         events.setClosable(false);
 
-        tabPane.getTabs().addAll(events, createPersonTab(), location);
+        tabPane.getTabs().addAll(events, createPersonTab(), createLocationTab());
         return tabPane;
     }
 
@@ -44,6 +42,12 @@ public class LayoutHandler {
         Tab person = new Tab("Person", personHandler.getUiRoot());
         person.setClosable(false);
         return person;
+    }
+
+    private Tab createLocationTab() {
+        Tab location = new Tab("Location", locationHandler.getUiRoot());
+        location.setClosable(false);
+        return location;
     }
 
     private MenuBar createMenubar() {

@@ -12,12 +12,6 @@ import java.net.http.HttpResponse;
 
 import static de.ostfale.jug.beui.http.HttpHandler.PERSON_BASE;
 
-/**
- * Service task to delete a person from database
- * Created :  07.08.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class DeletePersonTaskService extends BaseTaskService<Void> {
 
     private static final Logger log = LoggerFactory.getLogger(DeletePersonTaskService.class);

@@ -11,12 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpResponse;
 
-/**
- * Update person attributes
- * Created :  10.08.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class UpdatePersonTaskService extends BaseTaskService<Person> {
 
     private static final Logger log = LoggerFactory.getLogger(UpdatePersonTaskService.class);

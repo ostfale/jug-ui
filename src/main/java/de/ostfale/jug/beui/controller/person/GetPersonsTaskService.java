@@ -14,12 +14,6 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Service which provides person data in a concurrent way using a service worker
- * Created :  31.07.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
 
     private static final Logger log = LoggerFactory.getLogger(GetPersonsTaskService.class);

@@ -12,12 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
-/**
- * Add new person to database
- * Created :  06.08.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class AddPersonTaskService extends BaseTaskService<Void> {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());

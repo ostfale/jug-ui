@@ -22,12 +22,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-/**
- * Layout controller for persons master detail pane
- * Created :  06.08.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class PersonMasterDetailController implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(PersonMasterDetailController.class);
