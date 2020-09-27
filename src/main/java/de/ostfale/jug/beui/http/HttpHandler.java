@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,18 +14,13 @@ import java.util.concurrent.CompletableFuture;
 import static java.net.http.HttpResponse.BodyHandlers;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-/**
- * Provides services to retrieve data from backend
- * Created :  31.07.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class HttpHandler {
 
     private static final Logger log = LoggerFactory.getLogger(HttpHandler.class);
 
     private static final String BACKEND_HOST = "http://localhost:8080/api/v1/";
     public static final String PERSON_BASE = BACKEND_HOST + "person/";
+    public static final String LOCATION_BASE = BACKEND_HOST + "location/";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 

@@ -7,12 +7,6 @@ import javafx.util.Callback;
 
 import java.util.Objects;
 
-/**
- * Domain class for person object
- * Created :  31.07.2020
- *
- * @author : Uwe Sauerbrei
- */
 public class Person {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);

@@ -4,6 +4,8 @@ import de.ostfale.jug.beui.ui.handler.LayoutHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import javax.imageio.spi.ServiceRegistry;
+
 public class JugUI extends Application {
 
     public static void main(String[] args) {
