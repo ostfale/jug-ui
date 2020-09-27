@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -49,7 +48,7 @@ public class PersonMasterDetailController implements Initializable {
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
     private Person selectedPerson;
     private ChangeListener<Person> personChangeListener;
-    private final GetPersonsTaskService getPersonsTaskService = new GetPersonsTaskService();
+    private final GetPersonService getPersonService = new GetPersonService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
     private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
     private final UpdatePersonTaskService updatePersonTaskService = new UpdatePersonTaskService();
@@ -69,8 +68,7 @@ public class PersonMasterDetailController implements Initializable {
                 .or(txt_lastname.textProperty().isEmpty())
                 .or(txt_email.textProperty().isEmpty()));
 
-        getPersonsTaskService.startService();
-        processGetServiceResult(getPersonsTaskService);
+        processGetServiceResult(getPersonService);
         processAddPersonServiceResult(addPersonTaskService);
         processDeletePersonServiceResult(deletePersonTaskService);
         initListView(lst_person);
@@ -114,19 +112,15 @@ public class PersonMasterDetailController implements Initializable {
         return sortedList;
     }
 
-    private void processGetServiceResult(GetPersonsTaskService taskService) {
-        taskService.getService().setOnSucceeded(e -> {
-            final List<Person> resultList = taskService.getService().getValue();
-            log.debug("Update PersonList found {} persons", resultList.size());
-            personList.clear();
-            personList.addAll(resultList);
-        });
+    private void processGetServiceResult(GetPersonService taskService) {
+        taskService.startService();
+        taskService.updateList(personList);
     }
 
     private void processAddPersonServiceResult(AddPersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person successfully added...");
-            getPersonsTaskService.startService();
+            getPersonService.startService();
             lst_person.refresh();
         });
     }
@@ -134,7 +128,7 @@ public class PersonMasterDetailController implements Initializable {
     private void processDeletePersonServiceResult(DeletePersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person has been successfully deleted...");
-            getPersonsTaskService.startService();
+            getPersonService.startService();
             lst_person.refresh();
         });
     }
@@ -154,7 +148,7 @@ public class PersonMasterDetailController implements Initializable {
 
     @FXML
     private void refreshButtonAction(ActionEvent actionEvent) {
-        getPersonsTaskService.startService();
+        getPersonService.startService();
     }
 
     @FXML

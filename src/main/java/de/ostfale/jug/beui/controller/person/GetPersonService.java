@@ -9,16 +9,14 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
+public class GetPersonService extends BaseTaskService<List<Person>> {
 
-    private static final Logger log = LoggerFactory.getLogger(GetPersonsTaskService.class);
+    private static final Logger log = LoggerFactory.getLogger(GetPersonService.class);
 
-    public GetPersonsTaskService() {
+    public GetPersonService() {
         service = initService();
     }
 
@@ -37,5 +35,14 @@ public class GetPersonsTaskService extends BaseTaskService<List<Person>> {
                 };
             }
         };
+    }
+
+    public void updateList(List<Person> aList) {
+        service.setOnSucceeded(e -> {
+            var personList = service.getValue();
+            log.debug("Update PersonList found {} persons", personList.size());
+            aList.clear();
+            aList.addAll(personList);
+        });
     }
 }

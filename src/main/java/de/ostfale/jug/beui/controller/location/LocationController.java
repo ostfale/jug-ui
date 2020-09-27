@@ -1,6 +1,6 @@
 package de.ostfale.jug.beui.controller.location;
 
-import de.ostfale.jug.beui.controller.person.GetPersonsTaskService;
+import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
 import javafx.beans.property.BooleanProperty;
@@ -52,7 +52,7 @@ public class LocationController implements Initializable {
 
 
     private final ObservableList<Person> personList = FXCollections.observableArrayList();
-    private final GetPersonsTaskService getPersonService = new GetPersonsTaskService();
+    private final GetPersonService getPersonService = new GetPersonService();
 
 
     @Override
@@ -68,7 +68,7 @@ public class LocationController implements Initializable {
         listView.setItems(sortedList);
     }
 
-    private void processGetPersonListResult(GetPersonsTaskService taskService) {
+    private void processGetPersonListResult(GetPersonService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             final List<Person> resultList = taskService.getService().getValue();
             log.debug("Update PersonList found {} persons", resultList.size());
