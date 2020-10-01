@@ -3,11 +3,9 @@ package de.ostfale.jug.beui.controller.person;
 import de.ostfale.jug.beui.domain.Person;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -47,7 +45,6 @@ public class PersonMasterDetailController implements Initializable {
     private final ObservableList<Person> personList = FXCollections.observableArrayList();
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
     private Person selectedPerson;
-    private ChangeListener<Person> personChangeListener;
     private final GetPersonService getPersonService = new GetPersonService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
     private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
@@ -71,15 +68,13 @@ public class PersonMasterDetailController implements Initializable {
         processGetServiceResult(getPersonService);
         processAddPersonServiceResult(addPersonTaskService);
         processDeletePersonServiceResult(deletePersonTaskService);
-        initListView(lst_person);
+        initListView(lst_person, getPersonService.getSortedList(personList));
     }
 
-    private void initListView(ListView<Person> listView) {
-        SortedList<Person> sortedList = prepareSortedList(personList);
+    private void initListView(ListView<Person> listView, SortedList<Person> sortedList) {
         listView.setItems(sortedList);
-
         listView.getSelectionModel().selectedItemProperty().addListener(
-                personChangeListener = ((observable, oldValue, newValue) -> {
+                ((observable, oldValue, newValue) -> {
                     selectedPerson = newValue; // can be null if nothing is selected
                     modifiedProperty.set(false);
                     if (newValue != null) {
@@ -96,20 +91,7 @@ public class PersonMasterDetailController implements Initializable {
                         ta_bio.setText("");
                     }
                 }));
-
         listView.getSelectionModel().selectFirst();  // pre-select first entry
-    }
-
-    private SortedList<Person> prepareSortedList(ObservableList<Person> personList) {
-        SortedList<Person> sortedList = new SortedList<>(personList);  // use sorted list by last and first name
-        sortedList.setComparator((p1, p2) -> {
-            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
-            if (result == 0) {
-                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
-            }
-            return result;
-        });
-        return sortedList;
     }
 
     private void processGetServiceResult(GetPersonService taskService) {
@@ -147,12 +129,12 @@ public class PersonMasterDetailController implements Initializable {
     }
 
     @FXML
-    private void refreshButtonAction(ActionEvent actionEvent) {
+    private void refreshButtonAction() {
         getPersonService.startService();
     }
 
     @FXML
-    private void addPersonAction(ActionEvent actionEvent) {
+    private void addPersonAction() {
         String firstName = txt_firstname.getText();
         String lastName = txt_lastname.getText();
         String email = txt_email.getText();
@@ -164,7 +146,7 @@ public class PersonMasterDetailController implements Initializable {
     }
 
     @FXML
-    private void updatePersonAction(ActionEvent actionEvent) {
+    private void updatePersonAction() {
         selectedPerson.setFirstName(txt_firstname.getText());
         selectedPerson.setLastName(txt_lastname.getText());
         selectedPerson.setEmail(txt_email.getText());
@@ -175,7 +157,7 @@ public class PersonMasterDetailController implements Initializable {
     }
 
     @FXML
-    private void deletePersonAction(ActionEvent actionEvent) {
+    private void deletePersonAction() {
         deletePersonTaskService.setPerson(selectedPerson);
         deletePersonTaskService.startService();
     }
