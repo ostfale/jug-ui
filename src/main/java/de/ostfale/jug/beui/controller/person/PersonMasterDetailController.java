@@ -1,5 +1,6 @@
 package de.ostfale.jug.beui.controller.person;
 
+import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.domain.Person;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,7 +20,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class PersonMasterDetailController implements Initializable {
+public class PersonMasterDetailController extends BaseController implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(PersonMasterDetailController.class);
 
@@ -84,11 +85,7 @@ public class PersonMasterDetailController implements Initializable {
                         txt_phone.setText(selectedPerson.getPhone());
                         ta_bio.setText(selectedPerson.getBio());
                     } else {
-                        txt_firstname.setText("");
-                        txt_lastname.setText("");
-                        txt_email.setText("");
-                        txt_phone.setText("");
-                        ta_bio.setText("");
+                        resetTextFields(txt_firstname, txt_lastname, txt_email, txt_phone, ta_bio );
                     }
                 }));
         listView.getSelectionModel().selectFirst();  // pre-select first entry

@@ -1,8 +1,10 @@
 package de.ostfale.jug.beui.controller.location;
 
+import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.services.location.GetLocationService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -21,12 +23,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class LocationController implements Initializable {
+public class LocationController extends BaseController implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(LocationController.class);
 
     @FXML
-    private ListView<Location> lst_person;
+    private ListView<Location> lst_location;
     @FXML
     private TextField tf_name;
     @FXML
@@ -39,6 +41,8 @@ public class LocationController implements Initializable {
     private TextField tf_streetName;
     @FXML
     private TextField tf_streetNo;
+    @FXML
+    private TextField tf_email;
     @FXML
     private ComboBox<Person> cb_contact;
     @FXML
@@ -54,18 +58,57 @@ public class LocationController implements Initializable {
     private final ObservableList<Person> personList = FXCollections.observableArrayList();
     private final GetPersonService getPersonService = new GetPersonService();
 
+    private final ObservableList<Location> locationList = FXCollections.observableArrayList();
+    private final GetLocationService getLocationService = new GetLocationService();
+    private Location selectedLocation;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // bindings
+        btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
+
+        processGetServiceResult(getLocationService);
         initPersonListView(cb_contact);
+        initLocationListView(lst_location, getLocationService.getSortedList(locationList));
+    }
+
+    private void initLocationListView(ListView<Location> listView, SortedList<Location> sortedList) {
+        listView.setItems(sortedList);
+        listView.getSelectionModel().selectFirst();
+
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    selectedLocation = newValue;
+                    modifiedProperty.set(false);
+                    if (newValue != null) {
+                        tf_name.setText(selectedLocation.getName());
+                        tf_country.setText(selectedLocation.getCountry());
+                        tf_city.setText(selectedLocation.getCity());
+                        tf_postalCode.setText(selectedLocation.getPostalCode());
+                        tf_streetName.setText(selectedLocation.getStreetName());
+                        tf_streetNo.setText(selectedLocation.getStreetNumber());
+                        cb_contact.getSelectionModel().select(selectedLocation.getContact());
+                        tf_email.setText(selectedLocation.getContact().getEmail());
+                    } else {
+                        resetTextFields(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo, tf_email);
+                    }
+                }
+                ));
+
+    }
+
+    private void processGetServiceResult(GetLocationService taskService) {
+        taskService.startService();
+        taskService.updateList(locationList);
+
+
     }
 
     private void initPersonListView(ComboBox<Person> listView) {
         getPersonService.startService();
         processGetPersonListResult(getPersonService);
-
-        SortedList<Person> sortedList = prepareSortedPersonList(personList);
-        listView.setItems(sortedList);
+        listView.setItems(getPersonService.getSortedList(personList));
     }
 
     private void processGetPersonListResult(GetPersonService taskService) {
@@ -75,17 +118,5 @@ public class LocationController implements Initializable {
             personList.clear();
             personList.addAll(resultList);
         });
-    }
-
-    private SortedList<Person> prepareSortedPersonList(ObservableList<Person> personList) {
-        SortedList<Person> sortedList = new SortedList<>(personList);  // use sorted list by last and first name
-        sortedList.setComparator((p1, p2) -> {
-            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
-            if (result == 0) {
-                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
-            }
-            return result;
-        });
-        return sortedList;
     }
 }
