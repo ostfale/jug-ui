@@ -52,7 +52,7 @@
                      <children>
                         <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="6" GridPane.rowIndex="11">
                           <buttons>
-                            <Button fx:id="btn_refresh" mnemonicParsing="false" text="Refresh" />
+                            <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
                               <Button fx:id="btn_new" mnemonicParsing="false" text="New" />
                               <Button fx:id="btn_update" mnemonicParsing="false" text="Update" />
                               <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
@@ -127,7 +127,7 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <ComboBox fx:id="cb_contact" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <ComboBox fx:id="cb_contact" prefWidth="150.0" promptText="Select Contact" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -137,7 +137,7 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.rowSpan="4">
+                        <ListView fx:id="lst_room" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.rowSpan="4">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -161,12 +161,12 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <TextField fx:id="tf_roomName" GridPane.columnIndex="3" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField GridPane.columnIndex="5" GridPane.rowIndex="5">
+                        <TextField fx:id="tf_roomCapacity" GridPane.columnIndex="5" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -176,7 +176,7 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.rowSpan="3">
+                        <TextArea fx:id="ta_roomRemark" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.rowSpan="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>

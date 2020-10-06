@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Converter which maps Json to object and vice versa
@@ -40,6 +41,16 @@ public class JsonMapper {
         } catch (JsonProcessingException e) {
             log.error("Failed to ");
             return Collections.emptyList();
+        }
+    }
+
+    public static <T> Set<T> jsonToObjectSet(String json, Class<T> target) {
+        try {
+            CollectionType javaType = mapper.getTypeFactory().constructCollectionType(Set.class, target);
+            return mapper.readValue(json, javaType);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to ");
+            return Collections.emptySet();
         }
     }
 

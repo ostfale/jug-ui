@@ -32,6 +32,7 @@ public class GetLocationService extends BaseTaskService<List<Location>> {
                         log.debug("Start sync service to retrieve list of all locations...");
                         final HttpResponse<String> syncGet = new HttpHandler().getSync(HttpHandler.LOCATION_BASE);
                         final String body = syncGet.body();
+                        List<Location> locationList = JsonMapper.jsonToObjectList(body, Location.class);
                         return JsonMapper.jsonToObjectList(body, Location.class);
                     }
                 };

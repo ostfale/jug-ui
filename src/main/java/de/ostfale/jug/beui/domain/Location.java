@@ -1,9 +1,11 @@
 package de.ostfale.jug.beui.domain;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Location {
 
@@ -17,7 +19,15 @@ public class Location {
 
     private final ObjectProperty<Person> contact = new SimpleObjectProperty<>(this, "contact", null);
 
+    private final List<Room> rooms = new ArrayList<>();
+
+
     public Location() {
+    }
+
+
+    public List<Room> getRooms() {
+        return rooms;
     }
 
     public Person getContact() {
@@ -108,4 +118,5 @@ public class Location {
     public String toString() {
         return getName();
     }
+
 }

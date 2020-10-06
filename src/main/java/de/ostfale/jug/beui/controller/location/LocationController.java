@@ -4,6 +4,7 @@ import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.Room;
 import de.ostfale.jug.beui.services.location.GetLocationService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,10 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +28,8 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private ListView<Location> lst_location;
     @FXML
+    private ListView<Room> lst_room;
+    @FXML
     private TextField tf_name;
     @FXML
     private TextField tf_country;
@@ -43,6 +43,12 @@ public class LocationController extends BaseController implements Initializable 
     private TextField tf_streetNo;
     @FXML
     private TextField tf_email;
+    @FXML
+    private TextField tf_roomName;
+    @FXML
+    private TextField tf_roomCapacity;
+    @FXML
+    private TextArea ta_roomRemark;
     @FXML
     private ComboBox<Person> cb_contact;
     @FXML
@@ -63,6 +69,10 @@ public class LocationController extends BaseController implements Initializable 
     private Location selectedLocation;
 
 
+    private final ObservableList<Room> roomList = FXCollections.observableArrayList();
+    private Room selectedRoom;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // bindings
@@ -71,6 +81,29 @@ public class LocationController extends BaseController implements Initializable 
         processGetServiceResult(getLocationService);
         initPersonListView(cb_contact);
         initLocationListView(lst_location, getLocationService.getSortedList(locationList));
+        initRoomListView(lst_room);
+    }
+
+    private void initRoomListView(ListView<Room> lst_room) {
+        lst_room.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    selectedRoom = newValue;
+                    modifiedProperty.set(false);
+                    if (newValue != null) {
+                        tf_roomName.setText(selectedRoom.getName());
+                        tf_roomCapacity.setText(String.valueOf(selectedRoom.getCapacity()));
+                        ta_roomRemark.setText(selectedRoom.getRemark());
+                    } else {
+                        resetTextFields(tf_roomName, tf_roomCapacity, ta_roomRemark);
+                    }
+                }
+                ));
+    }
+
+    private void updateRoomList(List<Room> aRoomSet) {
+        roomList.clear();
+        roomList.addAll(aRoomSet);
+        lst_room.setItems(roomList);
     }
 
     private void initLocationListView(ListView<Location> listView, SortedList<Location> sortedList) {
@@ -90,6 +123,7 @@ public class LocationController extends BaseController implements Initializable 
                         tf_streetNo.setText(selectedLocation.getStreetNumber());
                         cb_contact.getSelectionModel().select(selectedLocation.getContact());
                         tf_email.setText(selectedLocation.getContact().getEmail());
+                        updateRoomList(selectedLocation.getRooms());
                     } else {
                         resetTextFields(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo, tf_email);
                     }
@@ -101,8 +135,6 @@ public class LocationController extends BaseController implements Initializable 
     private void processGetServiceResult(GetLocationService taskService) {
         taskService.startService();
         taskService.updateList(locationList);
-
-
     }
 
     private void initPersonListView(ComboBox<Person> listView) {
@@ -118,5 +150,12 @@ public class LocationController extends BaseController implements Initializable 
             personList.clear();
             personList.addAll(resultList);
         });
+    }
+
+    @FXML
+    private void refreshButtonAction() {
+        getLocationService.startService();
+        cb_contact.getSelectionModel().select(null);
+        lst_room.setItems(FXCollections.emptyObservableList());
     }
 }
