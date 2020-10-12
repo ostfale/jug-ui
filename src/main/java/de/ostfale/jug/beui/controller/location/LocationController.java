@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class LocationController extends BaseController implements Initializable {
@@ -77,7 +78,6 @@ public class LocationController extends BaseController implements Initializable 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // bindings
         btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
-
         processGetServiceResult(getLocationService);
         initPersonListView(cb_contact);
         initLocationListView(lst_location, getLocationService.getSortedList(locationList));
@@ -129,7 +129,6 @@ public class LocationController extends BaseController implements Initializable 
                     }
                 }
                 ));
-
     }
 
     private void processGetServiceResult(GetLocationService taskService) {
@@ -157,5 +156,20 @@ public class LocationController extends BaseController implements Initializable 
         getLocationService.startService();
         cb_contact.getSelectionModel().select(null);
         lst_room.setItems(FXCollections.emptyObservableList());
+    }
+
+    @FXML
+    private void showRoomPopup() {
+        TextInputDialog tid = new TextInputDialog();
+        tid.setTitle("Location Dialog");
+        tid.setHeaderText("Capacity >= 30");
+        tid.setContentText("Add room name:");
+        Optional<String> result = tid.showAndWait();
+        result.ifPresent(name -> {
+            Room room = new Room();
+            room.setName(name);
+            room.setCapacity(30);
+            roomList.add(room);
+        });
     }
 }
