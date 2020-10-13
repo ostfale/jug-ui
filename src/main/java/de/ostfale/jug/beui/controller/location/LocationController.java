@@ -58,6 +58,10 @@ public class LocationController extends BaseController implements Initializable 
     private Button btn_update;
     @FXML
     private Button btn_delete;
+    @FXML
+    private Button btn_addRoom;
+    @FXML
+    private Button btn_deleteRoom;
 
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
 
@@ -76,7 +80,9 @@ public class LocationController extends BaseController implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // bindings
+        createBindings();
+
+
         btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
         processGetServiceResult(getLocationService);
         initPersonListView(cb_contact);
@@ -98,6 +104,29 @@ public class LocationController extends BaseController implements Initializable 
                     }
                 }
                 ));
+    }
+
+    private void createBindings() {
+        // room
+        tf_roomName.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
+        tf_roomCapacity.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
+        ta_roomRemark.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
+        btn_addRoom.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
+        btn_deleteRoom.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
+
+        // main
+        btn_update.disableProperty().bind((lst_location.getSelectionModel().selectedItemProperty().isNull()));
+        btn_new.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNotNull()
+                .or(tf_name.textProperty().isEmpty())
+                .or(tf_country.textProperty().isEmpty())
+                .or(tf_city.textProperty().isEmpty())
+                .or(tf_postalCode.textProperty().isEmpty())
+                .or(tf_streetName.textProperty().isEmpty())
+                .or(tf_streetNo.textProperty().isEmpty())
+                .or(cb_contact.getSelectionModel().selectedItemProperty().isNull())
+        );
+
+
     }
 
     private void updateRoomList(List<Room> aRoomSet) {

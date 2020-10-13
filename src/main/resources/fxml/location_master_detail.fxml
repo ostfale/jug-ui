@@ -96,7 +96,7 @@
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_country" GridPane.columnIndex="3">
+                        <TextField fx:id="tf_country" text="Deutschland" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -144,8 +144,8 @@
                         </ListView>
                         <ButtonBar buttonMinWidth="30.0" maxWidth="30.0" prefHeight="40.0" prefWidth="30.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="9">
                           <buttons>
-                            <Button maxHeight="25.0" maxWidth="31.0" minHeight="25.0" minWidth="31.0" mnemonicParsing="false" onAction="#showRoomPopup" prefHeight="25.0" prefWidth="25.0" text="+" />
-                              <Button mnemonicParsing="false" text="-" />
+                            <Button fx:id="btn_addRoom" maxHeight="25.0" maxWidth="31.0" minHeight="25.0" minWidth="31.0" mnemonicParsing="false" onAction="#showRoomPopup" prefHeight="25.0" prefWidth="25.0" text="+" />
+                              <Button fx:id="btn_deleteRoom" mnemonicParsing="false" text="-" />
                           </buttons>
                            <GridPane.margin>
                               <Insets right="5.0" />
