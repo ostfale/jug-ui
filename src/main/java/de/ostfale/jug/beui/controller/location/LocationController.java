@@ -1,10 +1,12 @@
 package de.ostfale.jug.beui.controller.location;
 
 import de.ostfale.jug.beui.controller.BaseController;
+import de.ostfale.jug.beui.controller.person.AddPersonTaskService;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.domain.Room;
+import de.ostfale.jug.beui.services.location.AddLocationTaskService;
 import de.ostfale.jug.beui.services.location.GetLocationService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,9 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class LocationController extends BaseController implements Initializable {
 
@@ -71,6 +71,7 @@ public class LocationController extends BaseController implements Initializable 
 
     private final ObservableList<Location> locationList = FXCollections.observableArrayList();
     private final GetLocationService getLocationService = new GetLocationService();
+    private final AddLocationTaskService addLocationTaskService = new AddLocationTaskService();
     private Location selectedLocation;
 
 
@@ -82,12 +83,12 @@ public class LocationController extends BaseController implements Initializable 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         createBindings();
 
-
-        btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
         processGetServiceResult(getLocationService);
         initPersonListView(cb_contact);
         initLocationListView(lst_location, getLocationService.getSortedList(locationList));
         initRoomListView(lst_room);
+
+        processAddLocationServiceResult(addLocationTaskService);
     }
 
     private void initRoomListView(ListView<Room> lst_room) {
@@ -111,11 +112,11 @@ public class LocationController extends BaseController implements Initializable 
         tf_roomName.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
         tf_roomCapacity.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
         ta_roomRemark.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
-        btn_addRoom.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
         btn_deleteRoom.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
 
-        // main
+        // button
         btn_update.disableProperty().bind((lst_location.getSelectionModel().selectedItemProperty().isNull()));
+        btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
         btn_new.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNotNull()
                 .or(tf_name.textProperty().isEmpty())
                 .or(tf_country.textProperty().isEmpty())
@@ -181,6 +182,29 @@ public class LocationController extends BaseController implements Initializable 
     }
 
     @FXML
+    private void addLocationAction() {
+        Location location = new Location();
+        location.setName(tf_name.getText());
+        location.setCountry(tf_country.getText());
+        location.setCity(tf_city.getText());
+        location.setPostalCode(tf_postalCode.getText());
+        location.setStreetName(tf_streetName.getText());
+        location.setStreetNumber(tf_streetNo.getText());
+        location.setContact(cb_contact.getSelectionModel().getSelectedItem());
+        location.getRooms().addAll(new HashSet<>(lst_room.getItems()));
+        addLocationTaskService.setLocation(location);
+        addLocationTaskService.startService();
+    }
+
+    private void processAddLocationServiceResult(AddLocationTaskService taskService) {
+        taskService.getService().setOnSucceeded(e -> {
+            log.info("Location successfully added...");
+            getLocationService.startService();
+            lst_location.refresh();
+        });
+    }
+
+    @FXML
     private void refreshButtonAction() {
         getLocationService.startService();
         cb_contact.getSelectionModel().select(null);
@@ -198,7 +222,7 @@ public class LocationController extends BaseController implements Initializable 
             Room room = new Room();
             room.setName(name);
             room.setCapacity(30);
-            roomList.add(room);
+            lst_room.getItems().add(room);
         });
     }
 }

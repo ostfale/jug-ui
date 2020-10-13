@@ -53,7 +53,7 @@
                         <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="6" GridPane.rowIndex="11">
                           <buttons>
                             <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
-                              <Button fx:id="btn_new" mnemonicParsing="false" text="New" />
+                              <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addLocationAction" text="New" />
                               <Button fx:id="btn_update" mnemonicParsing="false" text="Update" />
                               <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
                           </buttons>
