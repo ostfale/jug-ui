@@ -69,6 +69,7 @@ public class PersonMasterDetailController extends BaseController implements Init
         processGetServiceResult(getPersonService);
         processAddPersonServiceResult(addPersonTaskService);
         processDeletePersonServiceResult(deletePersonTaskService);
+        processUpdatePersonServiceResult(updatePersonTaskService);
         initListView(lst_person, getPersonService.getSortedList(personList));
     }
 
@@ -85,7 +86,7 @@ public class PersonMasterDetailController extends BaseController implements Init
                         txt_phone.setText(selectedPerson.getPhone());
                         ta_bio.setText(selectedPerson.getBio());
                     } else {
-                        resetTextFields(txt_firstname, txt_lastname, txt_email, txt_phone, ta_bio );
+                        resetTextFields(txt_firstname, txt_lastname, txt_email, txt_phone, ta_bio);
                     }
                 }));
         listView.getSelectionModel().selectFirst();  // pre-select first entry
@@ -115,7 +116,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     private void processUpdatePersonServiceResult(UpdatePersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person has been successfully been updated...");
-            updatePersonTaskService.startService();
+            getPersonService.startService();
             lst_person.refresh();
         });
     }
@@ -144,6 +145,7 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     @FXML
     private void updatePersonAction() {
+        log.trace("Update person parameter...");
         selectedPerson.setFirstName(txt_firstname.getText());
         selectedPerson.setLastName(txt_lastname.getText());
         selectedPerson.setEmail(txt_email.getText());

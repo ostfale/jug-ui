@@ -54,7 +54,7 @@
                           <buttons>
                             <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
                               <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addLocationAction" text="New" />
-                              <Button fx:id="btn_update" mnemonicParsing="false" text="Update" />
+                              <Button fx:id="btn_update" mnemonicParsing="false" onAction="#updateLocationAction" text="Update" />
                               <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
                           </buttons>
                            <GridPane.margin>
@@ -91,32 +91,32 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="tf_name" GridPane.columnIndex="1">
+                        <TextField fx:id="tf_name" onKeyReleased="#handleKeyAction" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_country" text="Deutschland" GridPane.columnIndex="3">
+                        <TextField fx:id="tf_country" onKeyReleased="#handleKeyAction" text="Deutschland" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_city" GridPane.columnIndex="5">
+                        <TextField fx:id="tf_city" onKeyReleased="#handleKeyAction" GridPane.columnIndex="5">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_postalCode" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <TextField fx:id="tf_postalCode" onKeyReleased="#handleKeyAction" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_streetName" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <TextField fx:id="tf_streetName" onKeyReleased="#handleKeyAction" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_streetNo" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <TextField fx:id="tf_streetNo" onKeyReleased="#handleKeyAction" GridPane.columnIndex="5" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -161,12 +161,12 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="tf_roomName" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                        <TextField fx:id="tf_roomName" onKeyReleased="#handleKeyAction" GridPane.columnIndex="3" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="tf_roomCapacity" GridPane.columnIndex="5" GridPane.rowIndex="5">
+                        <TextField fx:id="tf_roomCapacity" onKeyReleased="#handleKeyAction" GridPane.columnIndex="5" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>
@@ -176,7 +176,7 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextArea fx:id="ta_roomRemark" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.rowSpan="3">
+                        <TextArea fx:id="ta_roomRemark" onKeyReleased="#handleKeyAction" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="6" GridPane.rowSpan="3">
                            <GridPane.margin>
                               <Insets left="5.0" right="5.0" />
                            </GridPane.margin>

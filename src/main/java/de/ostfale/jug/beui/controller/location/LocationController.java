@@ -1,18 +1,17 @@
 package de.ostfale.jug.beui.controller.location;
 
 import de.ostfale.jug.beui.controller.BaseController;
-import de.ostfale.jug.beui.controller.person.AddPersonTaskService;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.domain.Room;
 import de.ostfale.jug.beui.services.location.AddLocationTaskService;
 import de.ostfale.jug.beui.services.location.GetLocationService;
+import de.ostfale.jug.beui.services.location.UpdateLocationTaskService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -20,7 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class LocationController extends BaseController implements Initializable {
 
@@ -63,35 +65,82 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private Button btn_deleteRoom;
 
+    @FXML
+    private void handleKeyAction() {
+        modifiedProperty.set(true);
+    }
+
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
 
-
-    private final ObservableList<Person> personList = FXCollections.observableArrayList();
-    private final GetPersonService getPersonService = new GetPersonService();
-
+    // location
+    private Location selectedLocation;
     private final ObservableList<Location> locationList = FXCollections.observableArrayList();
     private final GetLocationService getLocationService = new GetLocationService();
     private final AddLocationTaskService addLocationTaskService = new AddLocationTaskService();
-    private Location selectedLocation;
+    private final UpdateLocationTaskService updateLocationTaskService = new UpdateLocationTaskService();
 
+    // person
+    private Person selectedPerson;
+    private final ObservableList<Person> personList = FXCollections.observableArrayList();
+    private final GetPersonService getPersonService = new GetPersonService();
 
-    private final ObservableList<Room> roomList = FXCollections.observableArrayList();
+    // room
     private Room selectedRoom;
+    private final ObservableList<Room> roomList = FXCollections.observableArrayList();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         createBindings();
 
-        processGetServiceResult(getLocationService);
-        initPersonListView(cb_contact);
-        initLocationListView(lst_location, getLocationService.getSortedList(locationList));
-        initRoomListView(lst_room);
+        initLocationListView();
+        initRoomListView();
+        initContactList();
 
+        updatePersonList();
+
+        processGetServiceResult(getLocationService);
         processAddLocationServiceResult(addLocationTaskService);
+        processUpdateLocationServiceResult(updateLocationTaskService);
     }
 
-    private void initRoomListView(ListView<Room> lst_room) {
+    private void initLocationListView() {
+        lst_location.setItems(getLocationService.getSortedList(locationList));
+        lst_location.getSelectionModel().selectFirst();
+
+        lst_location.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    selectedLocation = newValue;
+                    modifiedProperty.set(false);
+                    if (selectedLocation != null) {
+                        tf_name.setText(selectedLocation.getName());
+                        tf_country.setText(selectedLocation.getCountry());
+                        tf_city.setText(selectedLocation.getCity());
+                        tf_postalCode.setText(selectedLocation.getPostalCode());
+                        tf_streetName.setText(selectedLocation.getStreetName());
+                        tf_streetNo.setText(selectedLocation.getStreetNumber());
+                        cb_contact.getSelectionModel().select(selectedLocation.getContact());
+                        tf_email.setText(selectedLocation.getContact().getEmail());
+                        updateRoomList(selectedLocation.getRooms());
+                    } else {
+                        resetTextFields(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo, tf_email);
+                    }
+                }
+                ));
+    }
+
+    private void initContactList() {
+        cb_contact.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    selectedPerson = newValue;
+                    if (selectedPerson != null) {
+                        tf_email.setText(selectedPerson.getEmail());
+                    }
+                }
+                ));
+    }
+
+    private void initRoomListView() {
         lst_room.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
                     selectedRoom = newValue;
@@ -115,19 +164,17 @@ public class LocationController extends BaseController implements Initializable 
         btn_deleteRoom.disableProperty().bind(lst_room.getSelectionModel().selectedItemProperty().isNull());
 
         // button
-        btn_update.disableProperty().bind((lst_location.getSelectionModel().selectedItemProperty().isNull()));
+        btn_update.disableProperty().bind((lst_location.getSelectionModel().selectedItemProperty().isNull()
+                .or(modifiedProperty.not())
+                .or(allTextFieldsEmpty(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo))
+        ));
+
         btn_delete.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNull());
+
         btn_new.disableProperty().bind(lst_location.getSelectionModel().selectedItemProperty().isNotNull()
-                .or(tf_name.textProperty().isEmpty())
-                .or(tf_country.textProperty().isEmpty())
-                .or(tf_city.textProperty().isEmpty())
-                .or(tf_postalCode.textProperty().isEmpty())
-                .or(tf_streetName.textProperty().isEmpty())
-                .or(tf_streetNo.textProperty().isEmpty())
+                .or(allTextFieldsEmpty(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo))
                 .or(cb_contact.getSelectionModel().selectedItemProperty().isNull())
         );
-
-
     }
 
     private void updateRoomList(List<Room> aRoomSet) {
@@ -136,29 +183,12 @@ public class LocationController extends BaseController implements Initializable 
         lst_room.setItems(roomList);
     }
 
-    private void initLocationListView(ListView<Location> listView, SortedList<Location> sortedList) {
-        listView.setItems(sortedList);
-        listView.getSelectionModel().selectFirst();
-
-        listView.getSelectionModel().selectedItemProperty().addListener(
-                ((observable, oldValue, newValue) -> {
-                    selectedLocation = newValue;
-                    modifiedProperty.set(false);
-                    if (newValue != null) {
-                        tf_name.setText(selectedLocation.getName());
-                        tf_country.setText(selectedLocation.getCountry());
-                        tf_city.setText(selectedLocation.getCity());
-                        tf_postalCode.setText(selectedLocation.getPostalCode());
-                        tf_streetName.setText(selectedLocation.getStreetName());
-                        tf_streetNo.setText(selectedLocation.getStreetNumber());
-                        cb_contact.getSelectionModel().select(selectedLocation.getContact());
-                        tf_email.setText(selectedLocation.getContact().getEmail());
-                        updateRoomList(selectedLocation.getRooms());
-                    } else {
-                        resetTextFields(tf_name, tf_country, tf_city, tf_postalCode, tf_streetName, tf_streetNo, tf_email);
-                    }
-                }
-                ));
+    private void processUpdateLocationServiceResult(UpdateLocationTaskService taskService) {
+        taskService.getService().setOnSucceeded(e -> {
+            log.info("Location has been successfully been updated...");
+            updateLocationTaskService.startService();
+            lst_location.refresh();
+        });
     }
 
     private void processGetServiceResult(GetLocationService taskService) {
@@ -166,10 +196,11 @@ public class LocationController extends BaseController implements Initializable 
         taskService.updateList(locationList);
     }
 
-    private void initPersonListView(ComboBox<Person> listView) {
+    private void updatePersonList() {
         getPersonService.startService();
         processGetPersonListResult(getPersonService);
-        listView.setItems(getPersonService.getSortedList(personList));
+        cb_contact.setItems(getPersonService.getSortedList(personList));
+        cb_contact.getSelectionModel().select(null);
     }
 
     private void processGetPersonListResult(GetPersonService taskService) {
@@ -207,8 +238,8 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private void refreshButtonAction() {
         getLocationService.startService();
-        cb_contact.getSelectionModel().select(null);
         lst_room.setItems(FXCollections.emptyObservableList());
+        updatePersonList();
     }
 
     @FXML
@@ -224,5 +255,12 @@ public class LocationController extends BaseController implements Initializable 
             room.setCapacity(30);
             lst_room.getItems().add(room);
         });
+    }
+
+    @FXML
+    private void updateLocationAction() {
+        log.trace("Update location parameter...");
+
+
     }
 }

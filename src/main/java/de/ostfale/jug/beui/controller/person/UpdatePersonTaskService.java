@@ -34,7 +34,7 @@ public class UpdatePersonTaskService extends BaseTaskService<Person> {
                     protected Person call() throws Exception {
                         final String json = JsonMapper.objectToJson(person);
                         final HttpResponse<String> httpResponse = new HttpHandler().putSync(HttpHandler.PERSON_BASE + person.getId(), json);
-                        log.info("Updated {} {} with response: {}",person.getFirstName(),person.getLastName(), httpResponse.statusCode());
+                        log.info("Updated person {} {} with response: {}", person.getFirstName(), person.getLastName(), httpResponse.statusCode());
                         return JsonMapper.jsonToObject(httpResponse.body(), Person.class);
                     }
                 };
