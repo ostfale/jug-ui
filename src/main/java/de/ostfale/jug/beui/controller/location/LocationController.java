@@ -6,7 +6,7 @@ import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.domain.Room;
 import de.ostfale.jug.beui.services.location.AddLocationTaskService;
-import de.ostfale.jug.beui.services.location.GetLocationService;
+import de.ostfale.jug.beui.services.location.GetLocationTaskService;
 import de.ostfale.jug.beui.services.location.UpdateLocationTaskService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -75,7 +75,7 @@ public class LocationController extends BaseController implements Initializable 
     // location
     private Location selectedLocation;
     private final ObservableList<Location> locationList = FXCollections.observableArrayList();
-    private final GetLocationService getLocationService = new GetLocationService();
+    private final GetLocationTaskService getLocationTaskService = new GetLocationTaskService();
     private final AddLocationTaskService addLocationTaskService = new AddLocationTaskService();
     private final UpdateLocationTaskService updateLocationTaskService = new UpdateLocationTaskService();
 
@@ -99,13 +99,13 @@ public class LocationController extends BaseController implements Initializable 
 
         updatePersonList();
 
-        processGetServiceResult(getLocationService);
+        processGetServiceResult(getLocationTaskService);
         processAddLocationServiceResult(addLocationTaskService);
         processUpdateLocationServiceResult(updateLocationTaskService);
     }
 
     private void initLocationListView() {
-        lst_location.setItems(getLocationService.getSortedList(locationList));
+        lst_location.setItems(getLocationTaskService.getSortedList(locationList));
         lst_location.getSelectionModel().selectFirst();
 
         lst_location.getSelectionModel().selectedItemProperty().addListener(
@@ -191,7 +191,7 @@ public class LocationController extends BaseController implements Initializable 
         });
     }
 
-    private void processGetServiceResult(GetLocationService taskService) {
+    private void processGetServiceResult(GetLocationTaskService taskService) {
         taskService.startService();
         taskService.updateList(locationList);
     }
@@ -230,14 +230,14 @@ public class LocationController extends BaseController implements Initializable 
     private void processAddLocationServiceResult(AddLocationTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Location successfully added...");
-            getLocationService.startService();
+            getLocationTaskService.startService();
             lst_location.refresh();
         });
     }
 
     @FXML
     private void refreshButtonAction() {
-        getLocationService.startService();
+        getLocationTaskService.startService();
         lst_room.setItems(FXCollections.emptyObservableList());
         updatePersonList();
     }
@@ -260,7 +260,13 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private void updateLocationAction() {
         log.trace("Update location parameter...");
-
-
+        selectedLocation.setName(tf_name.getText());
+        selectedLocation.setCountry(tf_country.getText());
+        selectedLocation.setCity(tf_city.getText());
+        selectedLocation.setPostalCode(tf_postalCode.getText());
+        selectedLocation.setStreetName(tf_streetName.getText());
+        selectedLocation.setStreetNumber(tf_streetNo.getText());
+        updateLocationTaskService.setLocation(selectedLocation);
+        getLocationTaskService.startService();
     }
 }

@@ -14,11 +14,11 @@ import org.slf4j.LoggerFactory;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-public class GetLocationService extends BaseTaskService<List<Location>> {
+public class GetLocationTaskService extends BaseTaskService<List<Location>> {
 
-    private static final Logger log = LoggerFactory.getLogger(GetLocationService.class);
+    private static final Logger log = LoggerFactory.getLogger(GetLocationTaskService.class);
 
-    public GetLocationService() {
+    public GetLocationTaskService() {
         service = initService();
     }
 
@@ -29,10 +29,9 @@ public class GetLocationService extends BaseTaskService<List<Location>> {
                 return new Task<>() {
                     @Override
                     protected List<Location> call() throws Exception {
-                        log.debug("Start sync service to retrieve list of all locations...");
+                        log.debug("GET all locations...");
                         final HttpResponse<String> syncGet = new HttpHandler().getSync(HttpHandler.LOCATION_BASE);
                         final String body = syncGet.body();
-                        List<Location> locationList = JsonMapper.jsonToObjectList(body, Location.class);
                         return JsonMapper.jsonToObjectList(body, Location.class);
                     }
                 };

@@ -14,6 +14,7 @@ public class LayoutHandler {
 
     private final PersonHandler personHandler = new PersonHandler();
     private final LocationHandler locationHandler = new LocationHandler();
+    private final EventHandler eventHandler = new EventHandler();
 
     public void initLayout(Stage primaryStage) {
         primaryStage.setTitle("JUG HH Event Handler");
@@ -31,11 +32,14 @@ public class LayoutHandler {
     private TabPane createTabPane() {
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.RIGHT);
-        Tab events = new Tab("Events");
-        events.setClosable(false);
-
-        tabPane.getTabs().addAll(events, createPersonTab(), createLocationTab());
+        tabPane.getTabs().addAll(createEventTab(), createPersonTab(), createLocationTab());
         return tabPane;
+    }
+
+    private Tab createEventTab() {
+        Tab event = new Tab("Event", eventHandler.getUiRoot());
+        event.setClosable(false);
+        return event;
     }
 
     private Tab createPersonTab() {
