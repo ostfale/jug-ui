@@ -9,13 +9,12 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.net.http.HttpResponse;
 
 
 public class AddLocationTaskService extends BaseTaskService<Location> {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(AddLocationTaskService.class);
 
     private Location location;
 

@@ -11,9 +11,9 @@ import java.util.List;
 public class Event {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
-    private final StringProperty title = new SimpleStringProperty(this, "title", "");
-    private final StringProperty content = new SimpleStringProperty(this, "content", "");
-    private final StringProperty remark = new SimpleStringProperty(this, "remark", "");
+    private final StringProperty title = new SimpleStringProperty(this, "title", "title");
+    private final StringProperty content = new SimpleStringProperty(this, "content", "content");
+    private final StringProperty remark = new SimpleStringProperty(this, "remark", "remark");
     private final ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>(this, "dateTime", null);
     private final BooleanProperty isOnlineEvent = new SimpleBooleanProperty(this, "isOnlineEvent", true);
     private final BooleanProperty isComplete = new SimpleBooleanProperty(this, "isComplete", false);
