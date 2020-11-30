@@ -1,5 +1,6 @@
 package de.ostfale.jug.beui.controller.event;
 
+import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.domain.event.EventStatus;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -8,6 +9,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
 
 
 public class EventTableService {
@@ -32,8 +35,9 @@ public class EventTableService {
 
     private void addBinding() {
         dateColumn.setCellValueFactory(cellData -> {
-            Event event = cellData.getValue();
-            return new ReadOnlyStringWrapper(event.getDateTime().toString());
+            LocalDateTime scheduledDateTime = cellData.getValue().getDateTime();
+            String dateTimeString = scheduledDateTime != null ? scheduledDateTime.toString() : "";
+            return new ReadOnlyStringWrapper(dateTimeString);
         });
 
         PropertyValueFactory<Event, String> titleCellValueFactory = new PropertyValueFactory<>("title");
@@ -43,8 +47,9 @@ public class EventTableService {
         statusColumn.setCellValueFactory(statusCellValueFactory);
 
         locationColumn.setCellValueFactory(cellData -> {
-            Event event = cellData.getValue();
-            return new ReadOnlyStringWrapper(event.getLocation().getName());
+            Location eventLocation = cellData.getValue().getLocation();
+            String locationName = eventLocation != null ? eventLocation.getName() : "";
+            return new ReadOnlyStringWrapper(locationName);
         });
-    }
+    } 
 }

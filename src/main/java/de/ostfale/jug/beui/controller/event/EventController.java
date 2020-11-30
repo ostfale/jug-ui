@@ -3,6 +3,8 @@ package de.ostfale.jug.beui.controller.event;
 import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.services.event.GetEventTaskService;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -10,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +25,10 @@ public class EventController extends BaseController implements Initializable {
 
     @FXML
     private TableView<Event> tbl_event;
+
+    // field area
+    @FXML
+    TextField tf_title;
 
     // button area
     @FXML
@@ -42,6 +49,7 @@ public class EventController extends BaseController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        addSelectionListener();
         new EventTableService(tbl_event).initEventTableView();
         tbl_event.setItems(eventList);
 
@@ -51,6 +59,23 @@ public class EventController extends BaseController implements Initializable {
         eventList.clear();
         eventList.setAll(sortedList);
         System.out.println(sortedList);
+        actionService.processAddEventServiceResult(getEventTaskService);
+    }
+
+    private void addSelectionListener() {
+        tbl_event.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Event>() {
+            @Override
+            public void changed(ObservableValue<? extends Event> observable, Event oldValue, Event newValue) {
+                if (newValue != null) {
+                    selectedEvent = newValue;
+                    updateDataView();
+                }
+            }
+        });
+    }
+
+    private void updateDataView() {
+        tf_title.setText(selectedEvent.getTitle());
     }
 
     private void processGetServiceResult(GetEventTaskService taskService) {

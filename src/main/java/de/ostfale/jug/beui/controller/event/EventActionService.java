@@ -1,6 +1,7 @@
 package de.ostfale.jug.beui.controller.event;
 
 import de.ostfale.jug.beui.domain.event.Event;
+import de.ostfale.jug.beui.services.event.GetEventTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +16,14 @@ public class EventActionService {
     public void addNewEvent() {
         log.debug("Add new default event...");
         Event newEvent = new Event();
+        eventTaskService.setEvent(newEvent);
+        eventTaskService.startService();
     }
 
-    private void processAddEventServiceResult(AddEventTaskService taskService) {
-        taskService.getService().setOnSucceeded(e -> {
+    public void processAddEventServiceResult(GetEventTaskService getEventTaskService ) {
+        eventTaskService.getService().setOnSucceeded(e -> {
             log.info("Event successfully added...");
-        //    getLocationTaskService.startService();
-         //   lst_location.refresh();
+            getEventTaskService.startService();
         });
     }
 
