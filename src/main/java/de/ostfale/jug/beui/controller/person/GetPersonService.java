@@ -4,7 +4,6 @@ import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
-import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Service;

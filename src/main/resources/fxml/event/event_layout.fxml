@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ostfale.jug.beui.controller.event.EventLayoutController">
+   <children>
+      <SplitPane dividerPositions="0.3" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+        <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <fx:include source="event_master.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0">
+                <fx:include source="event_details.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

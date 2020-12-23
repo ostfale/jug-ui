@@ -19,11 +19,11 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class EventController extends BaseController implements Initializable {
+public class EventMasterController extends BaseController implements Initializable {
 
-    private static final Logger log = LoggerFactory.getLogger(EventController.class);
+    private static final Logger log = LoggerFactory.getLogger(EventMasterController.class);
 
-    @FXML
+ /*   @FXML
     private TableView<Event> tbl_event;
 
     // field area
@@ -38,7 +38,7 @@ public class EventController extends BaseController implements Initializable {
     @FXML
     Button btn_save;
     @FXML
-    Button btn_delete;
+    Button btn_delete;*/
 
     // event
     private Event selectedEvent;
@@ -49,7 +49,7 @@ public class EventController extends BaseController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addSelectionListener();
+     /*   addSelectionListener();
         new EventTableService(tbl_event).initEventTableView();
         tbl_event.setItems(eventList);
 
@@ -59,10 +59,10 @@ public class EventController extends BaseController implements Initializable {
         eventList.clear();
         eventList.setAll(sortedList);
         System.out.println(sortedList);
-        actionService.processAddEventServiceResult(getEventTaskService);
+        actionService.processAddEventServiceResult(getEventTaskService);*/
     }
 
-    private void addSelectionListener() {
+ /*   private void addSelectionListener() {
         tbl_event.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Event>() {
             @Override
             public void changed(ObservableValue<? extends Event> observable, Event oldValue, Event newValue) {
@@ -86,5 +86,5 @@ public class EventController extends BaseController implements Initializable {
     @FXML
     private void addNewEventAction() {
         actionService.addNewEvent();
-    }
+    }*/
 }

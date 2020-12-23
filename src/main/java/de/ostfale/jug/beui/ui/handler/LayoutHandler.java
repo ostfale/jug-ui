@@ -1,5 +1,6 @@
 package de.ostfale.jug.beui.ui.handler;
 
+import de.ostfale.jug.beui.ui.handler.event.EventLayoutHandler;
 import javafx.application.Platform;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
@@ -14,7 +15,7 @@ public class LayoutHandler {
 
     private final PersonHandler personHandler = new PersonHandler();
     private final LocationHandler locationHandler = new LocationHandler();
-    private final EventHandler eventHandler = new EventHandler();
+    private final EventLayoutHandler eventLayoutHandler = new EventLayoutHandler();
 
     public void initLayout(Stage primaryStage) {
         primaryStage.setTitle("JUG HH Event Handler");
@@ -37,7 +38,7 @@ public class LayoutHandler {
     }
 
     private Tab createEventTab() {
-        Tab event = new Tab("Event", eventHandler.getUiRoot());
+        Tab event = new Tab("Event", eventLayoutHandler.getUiRoot());
         event.setClosable(false);
         return event;
     }
