@@ -5,16 +5,19 @@ import de.ostfale.jug.beui.domain.Person;
 import javafx.beans.property.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
 
+    private static final String DEFAULT_DATE_TIME = "01.01.1970 19:00";
+
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
     private final StringProperty title = new SimpleStringProperty(this, "title", "title");
     private final StringProperty content = new SimpleStringProperty(this, "content", "content");
     private final StringProperty remark = new SimpleStringProperty(this, "remark", "remark");
-    private final ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>(this, "dateTime", null);
+    private final ObjectProperty<LocalDateTime> dateTime = new SimpleObjectProperty<>(this, "dateTime", getDefaultDT());
     private final BooleanProperty isOnlineEvent = new SimpleBooleanProperty(this, "isOnlineEvent", true);
     private final BooleanProperty isComplete = new SimpleBooleanProperty(this, "isComplete", false);
     private final ObjectProperty<EventStatus> eventStatus = new SimpleObjectProperty<>(this, "eventStatus", EventStatus.PLANNED);
@@ -145,5 +148,10 @@ public class Event {
 
     public List<Note> getHistory() {
         return history;
+    }
+
+    private LocalDateTime getDefaultDT() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        return LocalDateTime.parse(DEFAULT_DATE_TIME, formatter);
     }
 }

@@ -6,13 +6,12 @@ import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.domain.event.EventStatus;
 import de.ostfale.jug.beui.services.event.GetEventTaskService;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,20 +35,6 @@ public class EventMasterController extends BaseController implements Initializab
     // events
     private Event selectedEvent;
     private final ObservableList<Event> eventList = FXCollections.observableArrayList();
-
- /*
-
-    // button area
-    @FXML
-    Button btn_refresh;
-    @FXML
-    Button btn_new;
-    @FXML
-    Button btn_save;
-    @FXML
-    Button btn_delete;*/
-
-    // event
 
     private final GetEventTaskService getEventTaskService = new GetEventTaskService();
     private final EventActionService actionService = new EventActionService();
@@ -114,8 +99,11 @@ public class EventMasterController extends BaseController implements Initializab
         taskService.updateList(eventList);
     }
 
- /*   @FXML
-    private void addNewEventAction() {
+    public void addEvent() {
         actionService.addNewEvent();
-    }*/
+    }
+
+    public void deleteButtonBinding(Button deleteButton) {
+        deleteButton.disableProperty().bind(tbl_events.getSelectionModel().selectedItemProperty().isNull());
+    }
 }

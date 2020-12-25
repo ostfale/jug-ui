@@ -1,4 +1,4 @@
-package de.ostfale.jug.beui.controller.event;
+package de.ostfale.jug.beui.services.event;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.event.Event;
@@ -38,11 +38,11 @@ public class AddEventTaskService extends BaseTaskService<Event> {
                         if (response.statusCode() == 200) {
                             return JsonMapper.jsonToObject(response.body(), Event.class);
                         }
+                        log.error("Failure creating new event!");
                         return null;
                     }
                 };
             }
         };
     }
-
 }

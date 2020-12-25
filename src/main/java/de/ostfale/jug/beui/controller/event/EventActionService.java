@@ -1,6 +1,7 @@
 package de.ostfale.jug.beui.controller.event;
 
 import de.ostfale.jug.beui.domain.event.Event;
+import de.ostfale.jug.beui.services.event.AddEventTaskService;
 import de.ostfale.jug.beui.services.event.GetEventTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,5 +27,4 @@ public class EventActionService {
             getEventTaskService.startService();
         });
     }
-
 }

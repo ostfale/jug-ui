@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ostfale.jug.beui.controller.event.EventLayoutController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ostfale.jug.beui.controller.event.EventLayoutController">
    <children>
-      <SplitPane dividerPositions="0.3" layoutX="14.0" layoutY="14.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-        <items>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-                <fx:include fx:id="eventMaster" source="event_master.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-                <fx:include fx:id="eventDetails" source="event_details.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
-            </AnchorPane>
-        </items>
-      </SplitPane>
+      <BorderPane layoutX="5.0" layoutY="5.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+         <center>
+            <SplitPane dividerPositions="0.3" orientation="VERTICAL">
+              <items>
+                  <AnchorPane minHeight="100.0" minWidth="-Infinity">
+                      <fx:include fx:id="eventMaster" minHeight="-Infinity" minWidth="-Infinity" source="event_master.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+                  </AnchorPane>
+                  <AnchorPane minHeight="100.0" minWidth="-Infinity" prefHeight="100.0">
+                      <fx:include fx:id="eventDetails" minHeight="100.0" minWidth="-Infinity" source="event_details.fxml" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </center>
+         <bottom>
+            <ButtonBar BorderPane.alignment="CENTER">
+              <buttons>
+                <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addNewEvent" text="New" />
+                  <Button mnemonicParsing="false" text="Save" />
+                  <Button mnemonicParsing="false" text="Refresh" />
+                  <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
+              </buttons>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </BorderPane.margin>
+            </ButtonBar>
+         </bottom>
+      </BorderPane>
    </children>
 </AnchorPane>
