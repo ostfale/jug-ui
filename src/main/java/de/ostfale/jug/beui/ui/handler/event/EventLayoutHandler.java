@@ -8,21 +8,14 @@ public class EventLayoutHandler extends BaseHandler<EventLayoutController, Ancho
 
     private static final String fxmlPath = "./fxml/event/event_layout.fxml";
 
-    private final EventMasterHandler eventMasterHandler;
-    private final EventDetailHandler eventDetailHandler;
-
     public EventLayoutHandler() {
-        eventMasterHandler = new EventMasterHandler();
-        eventDetailHandler = new EventDetailHandler();
+        new EventMasterHandler();
+        new EventDetailHandler();
         initHandler();
     }
 
     @Override
     protected String getFXMLPath() {
         return fxmlPath;
-    }
-
-    public EventMasterHandler getEventMasterHandler() {
-        return eventMasterHandler;
     }
 }
