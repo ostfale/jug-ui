@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class EventMasterController extends BaseController implements Initializable {
 
@@ -44,6 +45,8 @@ public class EventMasterController extends BaseController implements Initializab
     TableColumn<Event, String> nameColumn = new TableColumn<>("Title");
     TableColumn<Event, EventStatus> statusColumn = new TableColumn<>("Status");
     TableColumn<Event, String> locationColumn = new TableColumn<>("Location");
+    TableColumn<Event, String> speakerColumn = new TableColumn<>("Speaker");
+    TableColumn<Event, String> communicationColumn = new TableColumn<>("Communication");
 
 
     @Override
@@ -58,11 +61,16 @@ public class EventMasterController extends BaseController implements Initializab
         actionService.processAddEventServiceResult(getEventTaskService);
     }
 
+    public Event getSelectedEvent() {
+        return selectedEvent;
+    }
+
     public void setEventDetailController(EventDetailController anEventDetailController) {
         this.eventDetailController = anEventDetailController;
     }
 
     private void initTable() {
+        dateColumn.setPrefWidth(150);
         dateColumn.setCellValueFactory(cellData -> {
             LocalDateTime scheduledDateTime = cellData.getValue().getDateTime();
             String dateTimeString = scheduledDateTime != null ? scheduledDateTime.toString() : "";
@@ -71,17 +79,33 @@ public class EventMasterController extends BaseController implements Initializab
 
         PropertyValueFactory<Event, String> titleCellValueFactory = new PropertyValueFactory<>("title");
         nameColumn.setCellValueFactory(titleCellValueFactory);
+        nameColumn.setPrefWidth(250);
 
         PropertyValueFactory<Event, EventStatus> statusCellValueFactory = new PropertyValueFactory<>("eventStatus");
         statusColumn.setCellValueFactory(statusCellValueFactory);
 
+        locationColumn.setPrefWidth(150);
         locationColumn.setCellValueFactory(cellData -> {
             Location eventLocation = cellData.getValue().getLocation();
             String locationName = eventLocation != null ? eventLocation.getName() : "";
             return new ReadOnlyStringWrapper(locationName);
         });
 
-        tbl_events.getColumns().addAll(dateColumn, nameColumn, statusColumn, locationColumn);
+        speakerColumn.setPrefWidth(150);
+        speakerColumn.setCellValueFactory(cellData -> {
+            var speaker = cellData.getValue().getSpeaker();
+            var result = speaker.stream().map(person -> person.getFirstName() + " " + person.getLastName()).collect(Collectors.joining(","));
+            return new ReadOnlyStringWrapper(result);
+        });
+
+        communicationColumn.setPrefWidth(150);
+        communicationColumn.setCellValueFactory(cellData -> {
+            Location eventLocation = cellData.getValue().getLocation();
+            String locationName = eventLocation != null ? eventLocation.getContactName() : "";
+            return new ReadOnlyStringWrapper(locationName);
+        });
+
+        tbl_events.getColumns().addAll(dateColumn, nameColumn, speakerColumn, statusColumn, locationColumn, communicationColumn);
         tbl_events.setItems(eventList);
     }
 
@@ -106,4 +130,10 @@ public class EventMasterController extends BaseController implements Initializab
     public void deleteButtonBinding(Button deleteButton) {
         deleteButton.disableProperty().bind(tbl_events.getSelectionModel().selectedItemProperty().isNull());
     }
+
+    public void saveButtonBinding(Button saveButton) {
+        saveButton.disableProperty().bind(tbl_events.getSelectionModel().selectedItemProperty().isNull());
+    }
+
+
 }

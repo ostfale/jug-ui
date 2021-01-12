@@ -26,6 +26,12 @@ public class Location {
     public Location() {
     }
 
+    public String getContactName() {
+        if (getContact() != null) {
+            return getContact().getFirstName() + " " + getContact().getLastName();
+        }
+        return "";
+    }
 
     public List<Room> getRooms() {
         return rooms;

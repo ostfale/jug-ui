@@ -22,7 +22,7 @@ public class LayoutHandler {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createMenubar());
         borderPane.setCenter(createTabPane());
-        Scene scene = new Scene(borderPane, 1200, 600);
+        Scene scene = new Scene(borderPane, 1300, 700);
         primaryStage.setScene(scene);
         primaryStage.initStyle(StageStyle.DECORATED);
         primaryStage.setX(50);

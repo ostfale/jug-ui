@@ -26,6 +26,9 @@ public class EventLayoutController extends BaseController implements Initializab
     @FXML
     private Button btn_new;
 
+    @FXML
+    private Button btn_save;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         eventMasterController.setEventDetailController(eventDetailsController);
@@ -38,7 +41,13 @@ public class EventLayoutController extends BaseController implements Initializab
         eventMasterController.addEvent();
     }
 
+    @FXML
+    private void saveEvent() {
+        eventDetailsController.save(eventMasterController.getSelectedEvent());
+    }
+
     private void addBindings() {
         eventMasterController.deleteButtonBinding(btn_delete);
+        eventMasterController.saveButtonBinding(btn_save);
     }
 }

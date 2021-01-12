@@ -26,7 +26,7 @@
             <ButtonBar BorderPane.alignment="CENTER">
               <buttons>
                 <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addNewEvent" text="New" />
-                  <Button mnemonicParsing="false" text="Save" />
+                  <Button fx:id="btn_save" mnemonicParsing="false" onAction="#saveEvent" text="Save" />
                   <Button mnemonicParsing="false" text="Refresh" />
                   <Button fx:id="btn_delete" mnemonicParsing="false" text="Delete" />
               </buttons>

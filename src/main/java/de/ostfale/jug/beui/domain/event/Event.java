@@ -1,8 +1,12 @@
 package de.ostfale.jug.beui.domain.event;
 
 import de.ostfale.jug.beui.domain.Location;
+import de.ostfale.jug.beui.domain.LocationStatus;
 import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.ScheduleStatus;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,10 +25,43 @@ public class Event {
     private final BooleanProperty isOnlineEvent = new SimpleBooleanProperty(this, "isOnlineEvent", true);
     private final BooleanProperty isComplete = new SimpleBooleanProperty(this, "isComplete", false);
     private final ObjectProperty<EventStatus> eventStatus = new SimpleObjectProperty<>(this, "eventStatus", EventStatus.PLANNED);
-    private final ObjectProperty<Person> speaker = new SimpleObjectProperty<>(this, "speaker", null);
+    private final ObjectProperty<LocationStatus> locationStatus = new SimpleObjectProperty<>(this, "locationStatus", LocationStatus.PLANNED.PLANNED);
+    private final ObjectProperty<ScheduleStatus> scheduleStatus = new SimpleObjectProperty<>(this, "scheduleStatus", ScheduleStatus.PLANNED);
     private final ObjectProperty<Location> location = new SimpleObjectProperty<>(this, "location", null);
 
+    private final List<Person> speaker = new ArrayList<>();
     private final List<Note> history = new ArrayList<>();
+
+    public List<Person> getSpeaker() {
+        return speaker;
+    }
+
+
+
+
+    public LocationStatus getLocationStatus() {
+        return locationStatus.get();
+    }
+
+    public ObjectProperty<LocationStatus> locationStatusProperty() {
+        return locationStatus;
+    }
+
+    public void setLocationStatus(LocationStatus locationStatus) {
+        this.locationStatus.set(locationStatus);
+    }
+
+    public ScheduleStatus getScheduleStatus() {
+        return scheduleStatus.get();
+    }
+
+    public ObjectProperty<ScheduleStatus> scheduleStatusProperty() {
+        return scheduleStatus;
+    }
+
+    public void setScheduleStatus(ScheduleStatus scheduleStatus) {
+        this.scheduleStatus.set(scheduleStatus);
+    }
 
     public String getId() {
         return id.get();
@@ -120,18 +157,6 @@ public class Event {
 
     public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus.set(eventStatus);
-    }
-
-    public Person getSpeaker() {
-        return speaker.get();
-    }
-
-    public ObjectProperty<Person> speakerProperty() {
-        return speaker;
-    }
-
-    public void setSpeaker(Person speaker) {
-        this.speaker.set(speaker);
     }
 
     public Location getLocation() {
