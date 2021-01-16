@@ -1,12 +1,13 @@
 package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.controller.BaseController;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
+import de.ostfale.jug.beui.domain.person.PersonModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 
 public class PersonMasterDetailController extends BaseController implements Initializable {
 
@@ -43,58 +43,52 @@ public class PersonMasterDetailController extends BaseController implements Init
     @FXML
     private Button btn_delete;
 
-    private final ObservableList<Person> personList = FXCollections.observableArrayList();
-    private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
-    private Person selectedPerson;
+    // model
+    private PersonModel personModel;
+
+    // service tasks
     private final GetPersonService getPersonService = new GetPersonService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
     private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
     private final UpdatePersonTaskService updatePersonTaskService = new UpdatePersonTaskService();
 
+    private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        buttonBinding();
+        processGetServiceResult(getPersonService);
+        processAddPersonServiceResult(addPersonTaskService);
+        processDeletePersonServiceResult(deletePersonTaskService);
+        processUpdatePersonServiceResult(updatePersonTaskService);
+    }
+
+    public void updateDataModel(ObservableList<Person> personList) {
+        if (personModel == null) {
+            personModel = new PersonModel();
+            personModel.currentPersonProperty().bind(lst_person.getSelectionModel().selectedItemProperty());
+            lst_person.setItems(personModel.getSortedList(personModel.getPersonList()));
+            this.personModel.currentPersonProperty().addListener(personListener);
+        }
+        personModel.setPersonList(personList);
+        lst_person.getSelectionModel().selectFirst();
+    }
+
+    private void buttonBinding() {
         btn_delete.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull());
-
-        btn_new.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNotNull()
-                .or(txt_firstname.textProperty().isEmpty())
-                .or(txt_lastname.textProperty().isEmpty())
-                .or(txt_email.textProperty().isEmpty()));
-
         btn_update.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull()
                 .or(modifiedProperty.not())
                 .or(txt_firstname.textProperty().isEmpty())
                 .or(txt_lastname.textProperty().isEmpty())
                 .or(txt_email.textProperty().isEmpty()));
-
-        processGetServiceResult(getPersonService);
-        processAddPersonServiceResult(addPersonTaskService);
-        processDeletePersonServiceResult(deletePersonTaskService);
-        processUpdatePersonServiceResult(updatePersonTaskService);
-        initListView(lst_person, getPersonService.getSortedList(personList));
-    }
-
-    private void initListView(ListView<Person> listView, SortedList<Person> sortedList) {
-        listView.setItems(sortedList);
-        listView.getSelectionModel().selectedItemProperty().addListener(
-                ((observable, oldValue, newValue) -> {
-                    selectedPerson = newValue; // can be null if nothing is selected
-                    modifiedProperty.set(false);
-                    if (newValue != null) {
-                        txt_firstname.setText(selectedPerson.getFirstName());
-                        txt_lastname.setText(selectedPerson.getLastName());
-                        txt_email.setText(selectedPerson.getEmail());
-                        txt_phone.setText(selectedPerson.getPhone());
-                        ta_bio.setText(selectedPerson.getBio());
-                    } else {
-                        resetTextFields(txt_firstname, txt_lastname, txt_email, txt_phone, ta_bio);
-                    }
-                }));
-        listView.getSelectionModel().selectFirst();  // pre-select first entry
     }
 
     private void processGetServiceResult(GetPersonService taskService) {
         taskService.startService();
-        taskService.updateList(personList);
+        taskService.getService().setOnSucceeded(e -> {
+            var personList = taskService.getService().getValue();
+            updateDataModel(FXCollections.observableArrayList(personList));
+        });
     }
 
     private void processAddPersonServiceResult(AddPersonTaskService taskService) {
@@ -133,31 +127,56 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     @FXML
     private void addPersonAction() {
-        String firstName = txt_firstname.getText();
-        String lastName = txt_lastname.getText();
-        String email = txt_email.getText();
-        String phone = txt_phone.getText();
-        String bio = ta_bio.getText();
-        Person newPerson = new Person(firstName, lastName, email, phone, bio);
-        addPersonTaskService.setPerson(newPerson);
+        addPersonTaskService.setPerson(new Person());
         addPersonTaskService.startService();
     }
 
     @FXML
     private void updatePersonAction() {
         log.trace("Update person parameter...");
-        selectedPerson.setFirstName(txt_firstname.getText());
-        selectedPerson.setLastName(txt_lastname.getText());
-        selectedPerson.setEmail(txt_email.getText());
-        selectedPerson.setPhone(txt_phone.getText());
-        selectedPerson.setBio(ta_bio.getText());
-        updatePersonTaskService.setPerson(selectedPerson);
+        updatePersonTaskService.setPerson(personModel.getCurrentPerson());
         updatePersonTaskService.startService();
+        modifiedProperty.set(false);
     }
 
     @FXML
     private void deletePersonAction() {
-        deletePersonTaskService.setPerson(selectedPerson);
+        deletePersonTaskService.setPerson(personModel.getCurrentPerson());
         deletePersonTaskService.startService();
     }
+
+    private String cachedFirstName;
+    private String cachedLastName;
+    private String cachedEmail;
+    private String cachedPhone;
+    private String cachedBio;
+
+    private final ChangeListener<Person> personListener = (obs, oldPerson, newPerson) -> {
+        if (oldPerson != null) {
+            txt_firstname.textProperty().unbindBidirectional(oldPerson.firstNameProperty());
+            txt_lastname.textProperty().unbindBidirectional(oldPerson.lastNameProperty());
+            txt_email.textProperty().unbindBidirectional(oldPerson.emailProperty());
+            txt_phone.textProperty().unbindBidirectional(oldPerson.phoneProperty());
+            ta_bio.textProperty().unbindBidirectional(oldPerson.bioProperty());
+        }
+
+        if (newPerson == null) {
+            txt_firstname.clear();
+            txt_lastname.clear();
+            txt_email.clear();
+            txt_phone.clear();
+            ta_bio.clear();
+        } else {
+            txt_firstname.textProperty().bindBidirectional(newPerson.firstNameProperty());
+            txt_lastname.textProperty().bindBidirectional(newPerson.lastNameProperty());
+            txt_email.textProperty().bindBidirectional(newPerson.emailProperty());
+            txt_phone.textProperty().bindBidirectional(newPerson.phoneProperty());
+            ta_bio.textProperty().bindBidirectional(newPerson.bioProperty());
+            cachedFirstName = newPerson.getFirstName();
+            cachedLastName = newPerson.getLastName();
+            cachedEmail = newPerson.getEmail();
+            cachedPhone = newPerson.getPhone();
+            cachedBio = newPerson.getBio();
+        }
+    };
 }

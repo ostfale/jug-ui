@@ -4,7 +4,7 @@ import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.LocationStatus;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.domain.ScheduleStatus;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.domain.event.EventStatus;
@@ -117,5 +117,13 @@ public class EventDetailController extends BaseController implements Initializab
             log.debug("Save Event");
             selectedEvent.setTitle(tf_title.getText());
         }
+    }
+
+    private void setEventParameter(Event targetEvent) {
+
+    }
+
+    private void setUIParameter(Event sourceEvent) {
+
     }
 }

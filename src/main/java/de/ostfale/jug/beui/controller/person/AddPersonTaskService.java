@@ -1,7 +1,7 @@
 package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
 import javafx.concurrent.Service;

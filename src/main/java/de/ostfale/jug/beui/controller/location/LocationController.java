@@ -3,7 +3,7 @@ package de.ostfale.jug.beui.controller.location;
 import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.Location;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.domain.Room;
 import de.ostfale.jug.beui.services.location.AddLocationTaskService;
 import de.ostfale.jug.beui.services.location.GetLocationTaskService;
@@ -199,7 +199,7 @@ public class LocationController extends BaseController implements Initializable 
     private void updatePersonList() {
         getPersonService.startService();
         processGetPersonListResult(getPersonService);
-        cb_contact.setItems(getPersonService.getSortedList(personList));
+    //    cb_contact.setItems(getPersonService.getSortedList(personList));
         cb_contact.getSelectionModel().select(null);
     }
 

@@ -1,4 +1,4 @@
-package de.ostfale.jug.beui.domain;
+package de.ostfale.jug.beui.domain.person;
 
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,10 +10,10 @@ import java.util.Objects;
 public class Person {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
-    private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "");
-    private final StringProperty lastName = new SimpleStringProperty(this, "lastName", "");
-    private final StringProperty email = new SimpleStringProperty(this, "email", "");
-    private final StringProperty phone = new SimpleStringProperty(this, "phone", "");
+    private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "Max");
+    private final StringProperty lastName = new SimpleStringProperty(this, "lastName", "Mustermann");
+    private final StringProperty email = new SimpleStringProperty(this, "email", "mm@mail.de");
+    private final StringProperty phone = new SimpleStringProperty(this, "phone", "123");
     private final StringProperty bio = new SimpleStringProperty(this, "bio", "");
 
     public Person() {

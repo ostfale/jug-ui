@@ -2,11 +2,9 @@ package de.ostfale.jug.beui.domain.event;
 
 import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.LocationStatus;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.domain.ScheduleStatus;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

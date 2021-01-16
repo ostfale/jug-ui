@@ -1,7 +1,7 @@
 package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
-import de.ostfale.jug.beui.domain.Person;
+import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
 import javafx.collections.ObservableList;
@@ -37,26 +37,5 @@ public class GetPersonService extends BaseTaskService<List<Person>> {
                 };
             }
         };
-    }
-
-    public SortedList<Person> getSortedList(ObservableList<Person> personList) {
-        SortedList<Person> sortedList = new SortedList<>(personList);
-        sortedList.setComparator((p1, p2) -> {
-            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
-            if (result == 0) {
-                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
-            }
-            return result;
-        });
-        return sortedList;
-    }
-
-    public void updateList(List<Person> aList) {
-        service.setOnSucceeded(e -> {
-            var personList = service.getValue();
-            log.debug("Update PersonList found {} persons", personList.size());
-            aList.clear();
-            aList.addAll(personList);
-        });
     }
 }

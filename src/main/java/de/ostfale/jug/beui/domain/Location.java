@@ -1,5 +1,6 @@
 package de.ostfale.jug.beui.domain;
 
+import de.ostfale.jug.beui.domain.person.Person;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
