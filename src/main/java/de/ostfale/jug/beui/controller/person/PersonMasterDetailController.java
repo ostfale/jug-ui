@@ -76,6 +76,7 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     private void buttonBinding() {
         btn_delete.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull());
+        btn_new.disableProperty().bind(modifiedProperty);
         btn_update.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull()
                 .or(modifiedProperty.not())
                 .or(txt_firstname.textProperty().isEmpty())

@@ -2,9 +2,9 @@ package de.ostfale.jug.beui.controller.location;
 
 import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
-import de.ostfale.jug.beui.domain.Location;
+import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.domain.person.Person;
-import de.ostfale.jug.beui.domain.Room;
+import de.ostfale.jug.beui.domain.location.Room;
 import de.ostfale.jug.beui.services.location.AddLocationTaskService;
 import de.ostfale.jug.beui.services.location.GetLocationTaskService;
 import de.ostfale.jug.beui.services.location.UpdateLocationTaskService;

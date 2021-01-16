@@ -1,7 +1,7 @@
 package de.ostfale.jug.beui.services.location;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
-import de.ostfale.jug.beui.domain.Location;
+import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
 import javafx.concurrent.Service;

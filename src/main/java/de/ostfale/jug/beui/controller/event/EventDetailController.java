@@ -2,8 +2,8 @@ package de.ostfale.jug.beui.controller.event;
 
 import de.ostfale.jug.beui.controller.BaseController;
 import de.ostfale.jug.beui.controller.person.GetPersonService;
-import de.ostfale.jug.beui.domain.Location;
-import de.ostfale.jug.beui.domain.LocationStatus;
+import de.ostfale.jug.beui.domain.location.Location;
+import de.ostfale.jug.beui.domain.location.LocationStatus;
 import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.domain.ScheduleStatus;
 import de.ostfale.jug.beui.domain.event.Event;

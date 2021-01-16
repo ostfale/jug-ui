@@ -1,7 +1,7 @@
 package de.ostfale.jug.beui.controller.event;
 
 import de.ostfale.jug.beui.controller.BaseController;
-import de.ostfale.jug.beui.domain.Location;
+import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.domain.event.EventStatus;
 import de.ostfale.jug.beui.services.event.GetEventTaskService;

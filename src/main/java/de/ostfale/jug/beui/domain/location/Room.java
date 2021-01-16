@@ -1,4 +1,4 @@
-package de.ostfale.jug.beui.domain;
+package de.ostfale.jug.beui.domain.location;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

@@ -1,4 +1,4 @@
-package de.ostfale.jug.beui.domain;
+package de.ostfale.jug.beui.domain.location;
 
 import de.ostfale.jug.beui.domain.person.Person;
 import javafx.beans.property.ObjectProperty;
@@ -12,12 +12,12 @@ import java.util.List;
 public class Location {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
-    private final StringProperty name = new SimpleStringProperty(this, "name", "");
+    private final StringProperty name = new SimpleStringProperty(this, "name", "dummy");
     private final StringProperty country = new SimpleStringProperty(this, "country", "DEU");
     private final StringProperty city = new SimpleStringProperty(this, "city", "Hamburg");
-    private final StringProperty postalCode = new SimpleStringProperty(this, "postalCode", "");
-    private final StringProperty streetName = new SimpleStringProperty(this, "streetName", "");
-    private final StringProperty streetNumber = new SimpleStringProperty(this, "streetNumber", "");
+    private final StringProperty postalCode = new SimpleStringProperty(this, "postalCode", "unknown");
+    private final StringProperty streetName = new SimpleStringProperty(this, "streetName", "unknown");
+    private final StringProperty streetNumber = new SimpleStringProperty(this, "streetNumber", "unknown");
 
     private final ObjectProperty<Person> contact = new SimpleObjectProperty<>(this, "contact", null);
 

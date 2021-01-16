@@ -1,7 +1,6 @@
 package de.ostfale.jug.beui.services.event;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
-import de.ostfale.jug.beui.domain.Location;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;

@@ -1,7 +1,7 @@
 package de.ostfale.jug.beui.domain.event;
 
-import de.ostfale.jug.beui.domain.Location;
-import de.ostfale.jug.beui.domain.LocationStatus;
+import de.ostfale.jug.beui.domain.location.Location;
+import de.ostfale.jug.beui.domain.location.LocationStatus;
 import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.domain.ScheduleStatus;
 import javafx.beans.property.*;
