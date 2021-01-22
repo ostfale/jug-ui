@@ -66,7 +66,7 @@ public class EventMasterController extends BaseController implements Initializab
     }
 
     public void setEventDetailController(EventDetailController anEventDetailController) {
-        this.eventDetailController = anEventDetailController;
+       // this.eventDetailController = anEventDetailController;
     }
 
     private void initTable() {

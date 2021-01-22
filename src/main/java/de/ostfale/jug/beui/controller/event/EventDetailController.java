@@ -1,7 +1,6 @@
 package de.ostfale.jug.beui.controller.event;
 
 import de.ostfale.jug.beui.controller.BaseController;
-import de.ostfale.jug.beui.controller.person.GetPersonService;
 import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.domain.location.LocationStatus;
 import de.ostfale.jug.beui.domain.person.Person;
@@ -9,6 +8,7 @@ import de.ostfale.jug.beui.domain.ScheduleStatus;
 import de.ostfale.jug.beui.domain.event.Event;
 import de.ostfale.jug.beui.domain.event.EventStatus;
 import de.ostfale.jug.beui.services.location.GetLocationTaskService;
+import de.ostfale.jug.beui.services.person.GetPersonTaskService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,7 +68,7 @@ public class EventDetailController extends BaseController implements Initializab
     GridPane grid_detail;
 
     private final GetLocationTaskService getLocationTaskService = new GetLocationTaskService();
-    private final GetPersonService getPersonService = new GetPersonService();
+    private final GetPersonTaskService getPersonTaskService = new GetPersonTaskService();
     private Event selectedEvent;
 
     @Override
@@ -77,7 +77,7 @@ public class EventDetailController extends BaseController implements Initializab
         cb_scheduleStatus.getItems().setAll(ScheduleStatus.values());
         cb_locationStatus.getItems().setAll(LocationStatus.values());
         processGetServiceResult(getLocationTaskService);
-        processGetServiceResult(getPersonService);
+        processGetServiceResult(getPersonTaskService);
     }
 
     public void updateData(Event aSelectedEvent) {
@@ -104,7 +104,7 @@ public class EventDetailController extends BaseController implements Initializab
         });
     }
 
-    private void processGetServiceResult(GetPersonService taskService) {
+    private void processGetServiceResult(GetPersonTaskService taskService) {
         taskService.startService();
         taskService.getService().setOnSucceeded(e -> {
             var personList = taskService.getService().getValue();

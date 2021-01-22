@@ -4,8 +4,6 @@ import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -37,20 +35,5 @@ public class GetLocationTaskService extends BaseTaskService<List<Location>> {
                 };
             }
         };
-    }
-
-    public SortedList<Location> getSortedList(ObservableList<Location> locationList) {
-        SortedList<Location> sortedList = new SortedList<>(locationList);
-        sortedList.setComparator((l1, l2) -> l1.getName().compareToIgnoreCase(l2.getName()));
-        return sortedList;
-    }
-
-    public void updateList(List<Location> aList) {
-        service.setOnSucceeded(e -> {
-            var locationList = service.getValue();
-            log.debug("Update List of Locations found {} locations", locationList.size());
-            aList.clear();
-            aList.addAll(locationList);
-        });
     }
 }

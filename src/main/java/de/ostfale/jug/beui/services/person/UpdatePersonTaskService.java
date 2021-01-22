@@ -1,4 +1,4 @@
-package de.ostfale.jug.beui.controller.person;
+package de.ostfale.jug.beui.services.person;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.person.Person;

@@ -1,8 +1,12 @@
 package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.controller.BaseController;
+import de.ostfale.jug.beui.domain.DataModel;
 import de.ostfale.jug.beui.domain.person.Person;
-import de.ostfale.jug.beui.domain.person.PersonModel;
+import de.ostfale.jug.beui.services.person.AddPersonTaskService;
+import de.ostfale.jug.beui.services.person.DeletePersonTaskService;
+import de.ostfale.jug.beui.services.person.GetPersonTaskService;
+import de.ostfale.jug.beui.services.person.UpdatePersonTaskService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -44,10 +48,10 @@ public class PersonMasterDetailController extends BaseController implements Init
     private Button btn_delete;
 
     // model
-    private PersonModel personModel;
+    private DataModel<Person> personModel;
 
     // service tasks
-    private final GetPersonService getPersonService = new GetPersonService();
+    private final GetPersonTaskService getPersonTaskService = new GetPersonTaskService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
     private final DeletePersonTaskService deletePersonTaskService = new DeletePersonTaskService();
     private final UpdatePersonTaskService updatePersonTaskService = new UpdatePersonTaskService();
@@ -57,7 +61,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         buttonBinding();
-        processGetServiceResult(getPersonService);
+        processGetServiceResult(getPersonTaskService);
         processAddPersonServiceResult(addPersonTaskService);
         processDeletePersonServiceResult(deletePersonTaskService);
         processUpdatePersonServiceResult(updatePersonTaskService);
@@ -65,12 +69,18 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     public void updateDataModel(ObservableList<Person> personList) {
         if (personModel == null) {
-            personModel = new PersonModel();
-            personModel.currentPersonProperty().bind(lst_person.getSelectionModel().selectedItemProperty());
-            lst_person.setItems(personModel.getSortedList(personModel.getPersonList()));
-            this.personModel.currentPersonProperty().addListener(personListener);
+            personModel = new DataModel<>();
+            personModel.currentObjectProperty().bind(lst_person.getSelectionModel().selectedItemProperty());
+            lst_person.setItems(personModel.getSortedList((p1, p2) -> {
+                int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
+                if (result == 0) {
+                    result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
+                }
+                return result;
+            }));
+            this.personModel.currentObjectProperty().addListener(personListener);
         }
-        personModel.setPersonList(personList);
+        personModel.setObjectList(personList);
         lst_person.getSelectionModel().selectFirst();
     }
 
@@ -84,7 +94,7 @@ public class PersonMasterDetailController extends BaseController implements Init
                 .or(txt_email.textProperty().isEmpty()));
     }
 
-    private void processGetServiceResult(GetPersonService taskService) {
+    private void processGetServiceResult(GetPersonTaskService taskService) {
         taskService.startService();
         taskService.getService().setOnSucceeded(e -> {
             var personList = taskService.getService().getValue();
@@ -95,7 +105,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     private void processAddPersonServiceResult(AddPersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person successfully added...");
-            getPersonService.startService();
+            getPersonTaskService.startService();
             lst_person.refresh();
         });
     }
@@ -103,7 +113,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     private void processDeletePersonServiceResult(DeletePersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person has been successfully deleted...");
-            getPersonService.startService();
+            getPersonTaskService.startService();
             lst_person.refresh();
         });
     }
@@ -111,7 +121,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     private void processUpdatePersonServiceResult(UpdatePersonTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Person has been successfully been updated...");
-            getPersonService.startService();
+            getPersonTaskService.startService();
             lst_person.refresh();
         });
     }
@@ -123,7 +133,7 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     @FXML
     private void refreshButtonAction() {
-        getPersonService.startService();
+        getPersonTaskService.startService();
     }
 
     @FXML
@@ -135,14 +145,14 @@ public class PersonMasterDetailController extends BaseController implements Init
     @FXML
     private void updatePersonAction() {
         log.trace("Update person parameter...");
-        updatePersonTaskService.setPerson(personModel.getCurrentPerson());
+        updatePersonTaskService.setPerson(personModel.getCurrentObject());
         updatePersonTaskService.startService();
         modifiedProperty.set(false);
     }
 
     @FXML
     private void deletePersonAction() {
-        deletePersonTaskService.setPerson(personModel.getCurrentPerson());
+        deletePersonTaskService.setPerson(personModel.getCurrentObject());
         deletePersonTaskService.startService();
     }
 

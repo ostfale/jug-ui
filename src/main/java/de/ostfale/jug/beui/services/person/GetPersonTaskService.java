@@ -1,11 +1,9 @@
-package de.ostfale.jug.beui.controller.person;
+package de.ostfale.jug.beui.services.person;
 
 import de.ostfale.jug.beui.controller.BaseTaskService;
 import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.http.HttpHandler;
 import de.ostfale.jug.beui.http.JsonMapper;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -14,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-public class GetPersonService extends BaseTaskService<List<Person>> {
+public class GetPersonTaskService extends BaseTaskService<List<Person>> {
 
-    private static final Logger log = LoggerFactory.getLogger(GetPersonService.class);
+    private static final Logger log = LoggerFactory.getLogger(GetPersonTaskService.class);
 
-    public GetPersonService() {
+    public GetPersonTaskService() {
         service = initService();
     }
 
