@@ -1,6 +1,7 @@
 package de.ostfale.jug.beui.controller.person;
 
 import de.ostfale.jug.beui.controller.BaseController;
+import de.ostfale.jug.beui.controller.location.ContactController;
 import de.ostfale.jug.beui.domain.DataModel;
 import de.ostfale.jug.beui.domain.person.Person;
 import de.ostfale.jug.beui.services.person.AddPersonTaskService;

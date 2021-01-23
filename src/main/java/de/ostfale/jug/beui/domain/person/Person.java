@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Person {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
-    private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "Max");
+    private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "Aaron");
     private final StringProperty lastName = new SimpleStringProperty(this, "lastName", "Mustermann");
     private final StringProperty email = new SimpleStringProperty(this, "email", "mm@mail.de");
     private final StringProperty phone = new SimpleStringProperty(this, "phone", "123");

@@ -1,7 +1,6 @@
 package de.ostfale.jug.beui.controller.location;
 
 import de.ostfale.jug.beui.controller.BaseController;
-import de.ostfale.jug.beui.services.person.GetPersonTaskService;
 import de.ostfale.jug.beui.domain.DataModel;
 import de.ostfale.jug.beui.domain.location.Location;
 import de.ostfale.jug.beui.domain.location.Room;
@@ -66,12 +65,12 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private Button btn_deleteRoom;
 
+    // sub controller
+    private ContactController contactController;
+
+
     // model
     private DataModel<Location> locationModel;
-
-    // service task person
-    private final GetPersonTaskService getPersonTaskService = new GetPersonTaskService();
-
 
     // service tasks location
     private final GetLocationTaskService getLocationTaskService = new GetLocationTaskService();
@@ -86,15 +85,9 @@ public class LocationController extends BaseController implements Initializable 
 
     private final BooleanProperty modifiedProperty = new SimpleBooleanProperty(false);
 
-    // person
-    private Person selectedPerson;
-    private final ObservableList<Person> personList = FXCollections.observableArrayList();
-
-
     // room
     private Room selectedRoom;
     private final ObservableList<Room> roomList = FXCollections.observableArrayList();
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -104,8 +97,7 @@ public class LocationController extends BaseController implements Initializable 
         processGetServiceResult(getLocationTaskService);
         processAddLocationServiceResult(addLocationTaskService);
         processUpdateLocationServiceResult(updateLocationTaskService);
-        processGetServiceResult(getPersonTaskService);
-        initContactList();
+        contactController = new ContactController(cb_contact, tf_email);
     }
 
     public void updateDataModel(ObservableList<Location> locationList) {
@@ -117,18 +109,6 @@ public class LocationController extends BaseController implements Initializable 
         }
         locationModel.setObjectList(locationList);
         lst_location.getSelectionModel().selectFirst();
-    }
-
-    private void initContactList() {
-        cb_contact.setItems(personList);
-        cb_contact.getSelectionModel().selectedItemProperty().addListener(
-                ((observable, oldValue, newValue) -> {
-                    selectedPerson = newValue;
-                    if (selectedPerson != null) {
-                        tf_email.setText(selectedPerson.getEmail());
-                    }
-                }
-                ));
     }
 
     private void initRoomListView() {
@@ -181,19 +161,6 @@ public class LocationController extends BaseController implements Initializable 
             var locationList = taskService.getService().getValue();
             updateDataModel(FXCollections.observableArrayList(locationList));
         });
-    }
-
-    private void processGetServiceResult(GetPersonTaskService taskService) {
-        taskService.startService();
-        taskService.getService().setOnSucceeded(e -> {
-            var personList = taskService.getService().getValue();
-            updatePersonList(FXCollections.observableArrayList(personList));
-        });
-    }
-
-    private void updatePersonList(ObservableList<Person> aPersonList) {
-        personList.clear();
-        personList.addAll(aPersonList);
     }
 
     @FXML
@@ -251,6 +218,7 @@ public class LocationController extends BaseController implements Initializable 
             tf_postalCode.textProperty().unbindBidirectional(oldLocation.postalCodeProperty());
             tf_streetName.textProperty().unbindBidirectional(oldLocation.streetNameProperty());
             tf_streetNo.textProperty().unbindBidirectional(oldLocation.streetNumberProperty());
+            cb_contact.valueProperty().unbindBidirectional(oldLocation.contactProperty());
         }
 
         if (newLocation == null) {
@@ -260,6 +228,7 @@ public class LocationController extends BaseController implements Initializable 
             tf_postalCode.clear();
             tf_streetName.clear();
             tf_streetNo.clear();
+            cb_contact.getSelectionModel().clearSelection();
         } else {
             tf_name.textProperty().bindBidirectional(newLocation.nameProperty());
             tf_country.textProperty().bindBidirectional(newLocation.countryProperty());
@@ -267,6 +236,7 @@ public class LocationController extends BaseController implements Initializable 
             tf_postalCode.textProperty().bindBidirectional(newLocation.postalCodeProperty());
             tf_streetName.textProperty().bindBidirectional(newLocation.streetNameProperty());
             tf_streetNo.textProperty().bindBidirectional(newLocation.streetNumberProperty());
+            cb_contact.valueProperty().bindBidirectional(newLocation.contactProperty());
         }
     };
 }
