@@ -1,6 +1,6 @@
 package de.ostfale.jug.beui;
 
-import de.ostfale.jug.beui.ui.handler.LayoutHandler;
+import de.ostfale.jug.beui.common.LayoutHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

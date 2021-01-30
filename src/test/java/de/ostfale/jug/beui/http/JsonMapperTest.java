@@ -2,7 +2,8 @@ package de.ostfale.jug.beui.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.ostfale.jug.beui.domain.person.Person;
+import de.ostfale.jug.beui.common.JsonMapper;
+import de.ostfale.jug.beui.person.domain.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
