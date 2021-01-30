@@ -42,5 +42,4 @@ abstract public class BaseHandler<T, U> {
             log.error("Could not load fxml control");
         }
     }
-
 }

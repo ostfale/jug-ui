@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class LocationHandler extends BaseHandler<LocationController, AnchorPane> {
 
-    private static final String fxmlPath = "./fxml/location_master_detail.fxml";
+    private static final String fxmlPath = "fxml/location/location_master_detail.fxml";
 
     public LocationHandler() {
         initHandler();

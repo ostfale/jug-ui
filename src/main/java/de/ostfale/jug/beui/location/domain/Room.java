@@ -7,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 public class Room {
 
-    private final StringProperty name = new SimpleStringProperty(this, "name", "");
+    private final StringProperty name = new SimpleStringProperty(this, "name", "t.b.d.");
     private final IntegerProperty capacity = new SimpleIntegerProperty(this, "capacity", 0);
     private final StringProperty remark = new SimpleStringProperty(this, "remark", "");
 

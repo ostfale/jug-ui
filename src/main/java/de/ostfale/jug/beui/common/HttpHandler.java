@@ -20,7 +20,7 @@ public class HttpHandler {
 
     private static final String BACKEND_HOST = "http://localhost:8080/api/v1/";
     public static final String PERSON_BASE = BACKEND_HOST + "person/";
-    public static final String LOCATION_BASE = BACKEND_HOST + "location/";
+    public static final String LOCATION_BASE = BACKEND_HOST + "location";
     public static final String EVENT_BASE = BACKEND_HOST + "event/";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -48,7 +48,7 @@ public class HttpHandler {
     }
 
     public HttpResponse<String> postSync(String uri, String requestBody) throws IOException, InterruptedException {
-        log.debug("Async POST for URI: {}", uri);
+        log.debug("Sync POST for URI: {}", uri);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .version(HttpClient.Version.HTTP_2)

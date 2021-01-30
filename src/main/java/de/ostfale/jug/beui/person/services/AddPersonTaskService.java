@@ -1,6 +1,7 @@
 package de.ostfale.jug.beui.person.services;
 
 import de.ostfale.jug.beui.common.BaseTaskService;
+import de.ostfale.jug.beui.location.services.AddLocationTaskService;
 import de.ostfale.jug.beui.person.domain.Person;
 import de.ostfale.jug.beui.common.HttpHandler;
 import de.ostfale.jug.beui.common.JsonMapper;
@@ -14,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 
 public class AddPersonTaskService extends BaseTaskService<Void> {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static final Logger log = LoggerFactory.getLogger(AddPersonTaskService.class);
 
     private Person person;
 

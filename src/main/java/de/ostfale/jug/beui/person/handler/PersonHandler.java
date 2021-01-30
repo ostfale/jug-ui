@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class PersonHandler extends BaseHandler<PersonMasterDetailController, AnchorPane> {
 
-    private static final String fxmlPath = "./fxml/person_master_detail.fxml";
+    private static final String fxmlPath = "fxml/person/person_master_detail.fxml";
 
     public PersonHandler() {
         initHandler();

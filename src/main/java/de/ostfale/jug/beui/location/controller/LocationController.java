@@ -137,7 +137,6 @@ public class LocationController extends BaseController implements Initializable 
     private void addLocationAction() {
         addLocationTaskService.setLocation(new Location());
         addLocationTaskService.startService();
-        getLocationTaskService.startService();
     }
 
     private void processAddLocationServiceResult(AddLocationTaskService taskService) {

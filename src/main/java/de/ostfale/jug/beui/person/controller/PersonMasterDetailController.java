@@ -46,6 +46,8 @@ public class PersonMasterDetailController extends BaseController implements Init
     private Button btn_update;
     @FXML
     private Button btn_delete;
+    @FXML
+    private Button btn_refresh;
 
     // model
     private DataModel<Person> personModel;
