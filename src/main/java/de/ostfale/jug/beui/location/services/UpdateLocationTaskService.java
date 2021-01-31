@@ -1,9 +1,9 @@
 package de.ostfale.jug.beui.location.services;
 
 import de.ostfale.jug.beui.common.BaseTaskService;
-import de.ostfale.jug.beui.location.domain.Location;
 import de.ostfale.jug.beui.common.HttpHandler;
 import de.ostfale.jug.beui.common.JsonMapper;
+import de.ostfale.jug.beui.location.domain.Location;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class UpdateLocationTaskService extends BaseTaskService<Location> {
                     @Override
                     protected Location call() throws Exception {
                         final String json = JsonMapper.objectToJson(location);
-                        final HttpResponse<String> httpResponse = new HttpHandler().putSync(HttpHandler.LOCATION_BASE + location.getId(), json);
+                        final HttpResponse<String> httpResponse = new HttpHandler().putSync(HttpHandler.LOCATION_PATH + location.getId(), json);
                         log.info("Updated location {} with response: {}", location.getName(), httpResponse.statusCode());
                         return JsonMapper.jsonToObject(httpResponse.body(), Location.class);
                     }

@@ -4,10 +4,10 @@ import de.ostfale.jug.beui.common.BaseController;
 import de.ostfale.jug.beui.common.DataModel;
 import de.ostfale.jug.beui.location.domain.Location;
 import de.ostfale.jug.beui.location.domain.Room;
-import de.ostfale.jug.beui.person.domain.Person;
 import de.ostfale.jug.beui.location.services.AddLocationTaskService;
 import de.ostfale.jug.beui.location.services.GetLocationTaskService;
 import de.ostfale.jug.beui.location.services.UpdateLocationTaskService;
+import de.ostfale.jug.beui.person.domain.Person;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -96,7 +96,7 @@ public class LocationController extends BaseController implements Initializable 
         processAddLocationServiceResult(addLocationTaskService);
         processUpdateLocationServiceResult(updateLocationTaskService);
         contactController = new ContactController(cb_contact, tf_email);
-        roomController = new RoomController(lst_room, btn_addRoom,btn_deleteRoom,tf_roomName,tf_roomCapacity,ta_roomRemark);
+        roomController = new RoomController(lst_room, tf_roomName, tf_roomCapacity, ta_roomRemark);
     }
 
     public void updateDataModel(ObservableList<Location> locationList) {
@@ -120,7 +120,7 @@ public class LocationController extends BaseController implements Initializable 
     private void processUpdateLocationServiceResult(UpdateLocationTaskService taskService) {
         taskService.getService().setOnSucceeded(e -> {
             log.info("Location has been successfully been updated...");
-            updateLocationTaskService.startService();
+            getLocationTaskService.startService();
             lst_location.refresh();
         });
     }
@@ -150,19 +150,21 @@ public class LocationController extends BaseController implements Initializable 
     @FXML
     private void refreshButtonAction() {
         getLocationTaskService.startService();
-        lst_room.setItems(FXCollections.emptyObservableList());
     }
 
     @FXML
     private void showRoomPopup() {
-       roomController.addRoom();
+        roomController.addRoom();
     }
 
     @FXML
-    private void updateLocationAction() {
-        log.trace("Update location parameter...");
-        updateLocationTaskService.setLocation(locationModel.getCurrentObject());
-        getLocationTaskService.startService();
+    private void saveLocation() {
+        log.debug("Save location: {}", locationModel.getCurrentObject().getName());
+        var currentLocation = locationModel.getCurrentObject();
+        currentLocation.getRooms().addAll(roomController.getRoomModel().getObjectList());
+        updateLocationTaskService.setLocation(currentLocation);
+        updateLocationTaskService.startService();
+        modifiedProperty.set(false);
     }
 
     private void buttonBinding() {
@@ -189,6 +191,7 @@ public class LocationController extends BaseController implements Initializable 
             tf_streetName.clear();
             tf_streetNo.clear();
             cb_contact.getSelectionModel().clearSelection();
+            roomController.updateDataModel(FXCollections.emptyObservableList());
         } else {
             tf_name.textProperty().bindBidirectional(newLocation.nameProperty());
             tf_country.textProperty().bindBidirectional(newLocation.countryProperty());

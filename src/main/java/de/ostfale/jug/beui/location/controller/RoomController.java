@@ -20,16 +20,16 @@ public class RoomController {
     private DataModel<Room> roomModel;
 
     private final ListView<Room> lst_room;
-    private final Button add_Room;
-    private final Button delete_Room;
     private TextField tf_name;
     private TextField tf_capacity;
     private TextArea ta_remark;
 
-    public RoomController(ListView<Room> room, Button addRoom, Button deleteRoom, TextField roomName, TextField roomCapacity, TextArea roomRemark) {
+    public DataModel<Room> getRoomModel() {
+        return roomModel;
+    }
+
+    public RoomController(ListView<Room> room, TextField roomName, TextField roomCapacity, TextArea roomRemark) {
         this.lst_room = room;
-        this.add_Room = addRoom;
-        this.delete_Room = deleteRoom;
         this.tf_name = roomName;
         this.tf_capacity = roomCapacity;
         this.ta_remark = roomRemark;
@@ -47,7 +47,9 @@ public class RoomController {
             this.roomModel.currentObjectProperty().addListener(roomListener);
         }
         roomModel.setObjectList(roomObservableList);
-        lst_room.refresh();
+        if (roomModel.getObjectList().size() > 0) {
+            lst_room.getSelectionModel().selectFirst();
+        }
     }
 
     public void addRoom() {

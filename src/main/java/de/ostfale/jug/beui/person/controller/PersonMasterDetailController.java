@@ -43,7 +43,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     @FXML
     private Button btn_new;
     @FXML
-    private Button btn_update;
+    private Button btn_save;
     @FXML
     private Button btn_delete;
     @FXML
@@ -89,7 +89,7 @@ public class PersonMasterDetailController extends BaseController implements Init
     private void buttonBinding() {
         btn_delete.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull());
         btn_new.disableProperty().bind(modifiedProperty);
-        btn_update.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull()
+        btn_save.disableProperty().bind(lst_person.getSelectionModel().selectedItemProperty().isNull()
                 .or(modifiedProperty.not())
                 .or(txt_firstname.textProperty().isEmpty())
                 .or(txt_lastname.textProperty().isEmpty())
@@ -145,8 +145,8 @@ public class PersonMasterDetailController extends BaseController implements Init
     }
 
     @FXML
-    private void updatePersonAction() {
-        log.trace("Update person parameter...");
+    private void savePerson() {
+        log.debug("Save person: {}", personModel.getCurrentObject().getFirstName());
         updatePersonTaskService.setPerson(personModel.getCurrentObject());
         updatePersonTaskService.startService();
         modifiedProperty.set(false);

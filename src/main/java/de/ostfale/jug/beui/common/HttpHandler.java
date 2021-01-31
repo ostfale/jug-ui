@@ -19,8 +19,12 @@ public class HttpHandler {
     private static final Logger log = LoggerFactory.getLogger(HttpHandler.class);
 
     private static final String BACKEND_HOST = "http://localhost:8080/api/v1/";
-    public static final String PERSON_BASE = BACKEND_HOST + "person/";
+
+    //location
     public static final String LOCATION_BASE = BACKEND_HOST + "location";
+    public static final String LOCATION_PATH = LOCATION_BASE + "/";
+
+    public static final String PERSON_BASE = BACKEND_HOST + "person/";
     public static final String EVENT_BASE = BACKEND_HOST + "event/";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
