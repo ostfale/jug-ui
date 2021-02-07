@@ -149,6 +149,7 @@ public class LocationController extends BaseController implements Initializable 
 
     @FXML
     private void refreshButtonAction() {
+        contactController.updateContactList();
         getLocationTaskService.startService();
     }
 

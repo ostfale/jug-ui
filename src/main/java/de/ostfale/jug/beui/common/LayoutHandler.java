@@ -35,7 +35,7 @@ public class LayoutHandler {
     private TabPane createTabPane() {
         TabPane tabPane = new TabPane();
         tabPane.setSide(Side.RIGHT);
-        tabPane.getTabs().addAll(createEventTab(), createPersonTab(), createLocationTab());
+        tabPane.getTabs().addAll(createEventTab(), createLocationTab(),createPersonTab());
         return tabPane;
     }
 

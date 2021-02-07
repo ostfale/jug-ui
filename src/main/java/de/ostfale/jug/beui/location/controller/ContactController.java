@@ -25,12 +25,16 @@ public class ContactController {
     public ContactController(ComboBox<Person> cb_person, TextField tf_mail) {
         this.cb_person = cb_person;
         this.tf_mail = tf_mail;
+        updateContactList();
         processGetServiceResult(getPersonTaskService);
+    }
+
+    public void updateContactList() {
+        getPersonTaskService.startService();
     }
 
     private void processGetServiceResult(GetPersonTaskService taskService) {
         log.debug("Init person contact list for location view");
-        taskService.startService();
         taskService.getService().setOnSucceeded(e -> {
             var personList = taskService.getService().getValue();
             updateDataModel(FXCollections.observableArrayList(personList));

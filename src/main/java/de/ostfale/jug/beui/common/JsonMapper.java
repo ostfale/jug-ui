@@ -18,6 +18,8 @@ import java.util.Set;
  * Converter which maps Json to object and vice versa
  * Created :  31.07.2020
  *
+ *  https://docs.spring.io/spring-boot/docs/2.4.2/reference/htmlsingle/#howto-customize-the-jackson-objectmapper
+ *
  * @author : Uwe Sauerbrei
  */
 public class JsonMapper {
