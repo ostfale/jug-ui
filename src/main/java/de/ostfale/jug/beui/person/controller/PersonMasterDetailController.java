@@ -1,7 +1,6 @@
 package de.ostfale.jug.beui.person.controller;
 
 import de.ostfale.jug.beui.common.BaseController;
-import de.ostfale.jug.beui.common.DataModel;
 import de.ostfale.jug.beui.person.domain.Person;
 import de.ostfale.jug.beui.person.services.AddPersonTaskService;
 import de.ostfale.jug.beui.person.services.DeletePersonTaskService;
@@ -11,7 +10,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,9 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
-public class PersonMasterDetailController extends BaseController implements Initializable {
+public class PersonMasterDetailController extends BaseController<Person> implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(PersonMasterDetailController.class);
 
@@ -49,9 +48,6 @@ public class PersonMasterDetailController extends BaseController implements Init
     @FXML
     private Button btn_refresh;
 
-    // model
-    private DataModel<Person> personModel;
-
     // service tasks
     private final GetPersonTaskService getPersonTaskService = new GetPersonTaskService();
     private final AddPersonTaskService addPersonTaskService = new AddPersonTaskService();
@@ -67,23 +63,18 @@ public class PersonMasterDetailController extends BaseController implements Init
         processAddPersonServiceResult(addPersonTaskService);
         processDeletePersonServiceResult(deletePersonTaskService);
         processUpdatePersonServiceResult(updatePersonTaskService);
+        setChangeListener(personListener);
     }
 
-    public void updateDataModel(ObservableList<Person> personList) {
-        if (personModel == null) {
-            personModel = new DataModel<>();
-            personModel.currentObjectProperty().bind(lst_person.getSelectionModel().selectedItemProperty());
-            lst_person.setItems(personModel.getSortedList((p1, p2) -> {
-                int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
-                if (result == 0) {
-                    result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
-                }
-                return result;
-            }));
-            this.personModel.currentObjectProperty().addListener(personListener);
-        }
-        personModel.setObjectList(personList);
-        lst_person.getSelectionModel().selectFirst();
+    @Override
+    protected Comparator<Person> getComparator() {
+        return (p1, p2) -> {
+            int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
+            if (result == 0) {
+                result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
+            }
+            return result;
+        };
     }
 
     private void buttonBinding() {
@@ -100,7 +91,7 @@ public class PersonMasterDetailController extends BaseController implements Init
         taskService.startService();
         taskService.getService().setOnSucceeded(e -> {
             var personList = taskService.getService().getValue();
-            updateDataModel(FXCollections.observableArrayList(personList));
+            updateModel(FXCollections.observableArrayList(personList), lst_person);
         });
     }
 
@@ -146,23 +137,17 @@ public class PersonMasterDetailController extends BaseController implements Init
 
     @FXML
     private void savePerson() {
-        log.debug("Save person: {}", personModel.getCurrentObject().getFirstName());
-        updatePersonTaskService.setPerson(personModel.getCurrentObject());
+        log.debug("Save person: {}", dataModel.getCurrentObject().getFirstName());
+        updatePersonTaskService.setPerson(dataModel.getCurrentObject());
         updatePersonTaskService.startService();
         modifiedProperty.set(false);
     }
 
     @FXML
     private void deletePersonAction() {
-        deletePersonTaskService.setPerson(personModel.getCurrentObject());
+        deletePersonTaskService.setPerson(dataModel.getCurrentObject());
         deletePersonTaskService.startService();
     }
-
-    private String cachedFirstName;
-    private String cachedLastName;
-    private String cachedEmail;
-    private String cachedPhone;
-    private String cachedBio;
 
     private final ChangeListener<Person> personListener = (obs, oldPerson, newPerson) -> {
         if (oldPerson != null) {
@@ -185,11 +170,6 @@ public class PersonMasterDetailController extends BaseController implements Init
             txt_email.textProperty().bindBidirectional(newPerson.emailProperty());
             txt_phone.textProperty().bindBidirectional(newPerson.phoneProperty());
             ta_bio.textProperty().bindBidirectional(newPerson.bioProperty());
-            cachedFirstName = newPerson.getFirstName();
-            cachedLastName = newPerson.getLastName();
-            cachedEmail = newPerson.getEmail();
-            cachedPhone = newPerson.getPhone();
-            cachedBio = newPerson.getBio();
         }
     };
 }

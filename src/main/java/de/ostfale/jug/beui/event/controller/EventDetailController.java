@@ -21,7 +21,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-public class EventDetailController extends BaseController implements Initializable {
+public class EventDetailController extends BaseController<Void> implements Initializable {
 
     private static final Logger log = LoggerFactory.getLogger(EventDetailController.class);
 

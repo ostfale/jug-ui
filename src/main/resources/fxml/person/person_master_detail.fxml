@@ -95,7 +95,7 @@
                           <buttons>
                             <Button fx:id="btn_refresh" mnemonicParsing="false" onAction="#refreshButtonAction" text="Refresh" />
                               <Button fx:id="btn_new" mnemonicParsing="false" onAction="#addPersonAction" text="New" />
-                              <Button fx:id="btn_save" mnemonicParsing="false" onAction="#savePerson" text="save" />
+                              <Button fx:id="btn_save" mnemonicParsing="false" onAction="#savePerson" text="Save" />
                               <Button fx:id="btn_delete" mnemonicParsing="false" onAction="#deletePersonAction" text="Delete" />
                           </buttons>
                            <GridPane.margin>

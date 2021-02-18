@@ -5,9 +5,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Person {
+public class Person implements Comparator<Person> {
 
     private final StringProperty id = new SimpleStringProperty(this, "id", null);
     private final StringProperty firstName = new SimpleStringProperty(this, "firstName", "Aaron");
@@ -18,6 +19,7 @@ public class Person {
 
     public Person() {
     }
+
 
     @Override
     public String toString() {
@@ -32,9 +34,14 @@ public class Person {
         this.bio.set(bio);
     }
 
-    public static Callback<Person, Observable[]> extractor = p -> new Observable[]{
-            p.firstNameProperty(), p.lastNameProperty(), p.emailProperty(), p.phoneProperty(), p.bioProperty()
-    };
+    @Override
+    public int compare(Person p1, Person p2) {
+        int result = p1.getLastName().compareToIgnoreCase(p2.getLastName());
+        if (result == 0) {
+            result = p1.getFirstName().compareToIgnoreCase(p2.getFirstName());
+        }
+        return result;
+    }
 
     @Override
     public boolean equals(Object o) {
